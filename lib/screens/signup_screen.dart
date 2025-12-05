@@ -75,7 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const DashboardScreen(),
+          builder: (context) => const LoginScreen(),
         ),
       );
     }
@@ -165,7 +165,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                               child: TextFormField(
                                 keyboardType: TextInputType.name,
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
                                 decoration: _buildInputDecoration(
                                   labelText: "Last Name", 
                                   hintText: "Enter your last name", 
@@ -180,7 +180,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                               child: TextFormField(
                                 keyboardType: TextInputType.emailAddress,
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
                                 decoration: _buildInputDecoration(
                                   labelText: "Email", 
                                   hintText: "Enter your Email", 
@@ -195,7 +195,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                               child: TextFormField(
                                 keyboardType: TextInputType.phone,
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
                                 decoration: _buildInputDecoration(
                                   labelText: "Phone Number", 
                                   hintText: "Enter your phone number", 
@@ -211,7 +211,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: TextFormField(
                                 controller: _passwordController,
                                 obscureText: !_isPasswordVisible,
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
                                 onChanged: (value) {
                                   
                                   setState(() {
@@ -244,7 +244,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
                               child: TextFormField(
                                 obscureText: !_isConfirmPasswordVisible,
-                                style: const TextStyle(color: Colors.grey),
+                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
                                 decoration: _buildInputDecoration(
                                   labelText: 'Confirm Password',
                                   hintText: 'Re-enter your password',
@@ -347,6 +347,7 @@ class _SignupScreenState extends State<SignupScreen> {
     Widget? suffixIcon,
   }) {
     return InputDecoration(
+      floatingLabelBehavior: FloatingLabelBehavior.never,
       labelText: labelText,
       hintText: hintText,
       labelStyle: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),

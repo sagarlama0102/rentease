@@ -83,6 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Form(
+                
                 key: _fromKey,
                 child: Column(
                   children: [
@@ -94,6 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: const Color.fromARGB(255, 78, 78, 78),
                         ),
                         decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
                           labelText: "Email",
                           hintText: "Enter your Email",
                           suffixIcon: Icon(Icons.email),
@@ -125,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: !_isPasswordVisible,
                   style: TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
                   decoration: InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
                     labelText: 'Password',
                     hintText: 'Enter your Password',
                     suffixIcon: IconButton(
