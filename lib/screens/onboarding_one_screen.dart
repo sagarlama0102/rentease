@@ -9,7 +9,7 @@ class OnboardingOneScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/onboardingimage.png'),
+            image: AssetImage('assets/images/onboardingthreeimage.png'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
               Colors.black.withOpacity(0.4),
