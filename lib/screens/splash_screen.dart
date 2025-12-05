@@ -2,6 +2,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:rentease/screens/onboarding_combine_screen.dart';
+import 'package:rentease/screens/onboarding_one_screen.dart';
 import 'package:rentease/screens/onboarding_screen.dart';
 
 
@@ -21,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OnboardingScreen(),
+        MaterialPageRoute(builder: (context) => OnboardingCombineScreen(),
         ),
       );
     });

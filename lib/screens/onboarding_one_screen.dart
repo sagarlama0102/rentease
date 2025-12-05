@@ -22,17 +22,13 @@ class OnboardingOneScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.home_work, size: 140, color: Colors.green),
+              Icon(Icons.home_work, size: 140, color: Color(0xff142725)),
+              
               SizedBox(height: 20),
               Text(
-                "Find Rental Homes Easily",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
-              ),
-              SizedBox(height: 10),
-              Text(
-                "Browse available houses near you with ease.",
+                "Browse available houses \nnear you with ease.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 18, color: Colors.grey[700]),
+                style: TextStyle(color: Colors.white70, fontSize: 22),
               ),
             ],
           ),
