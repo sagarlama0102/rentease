@@ -73,9 +73,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _submitSignup() {
     if (_formKey.currentState!.validate()) {
-      // Logic for user registration goes here
-      
-      // Navigate to Dashboard upon successful signup
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -95,6 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: double.infinity,
         height: double.infinity,
