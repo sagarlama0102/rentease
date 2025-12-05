@@ -26,7 +26,7 @@ class OnboardingOneScreen extends StatelessWidget {
               
               SizedBox(height: 20),
               Text(
-                "Browse available houses \nnear you with ease.",
+                "Discover your dream home \nin just a few taps..",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, fontSize: 22),
               ),

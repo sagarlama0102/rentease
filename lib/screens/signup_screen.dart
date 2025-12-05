@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:rentease/screens/dashboard_screen.dart';
 import 'package:rentease/screens/login_screen.dart';
 

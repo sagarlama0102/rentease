@@ -24,7 +24,7 @@ class OnboardingTwoScreen extends StatelessWidget {
               Icon(Icons.map, size: 140, color: Color(0xff142725)),
               SizedBox(height: 20),
               Text(
-                "Explore properties on an \ninteractive map.",
+                "See all available properties \nin your area instantly..",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white70, fontSize: 22),
               ),
