@@ -43,7 +43,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (value == null || value.isEmpty) {
       return 'Please enter your phone number.';
     }
-    // Basic phone number validation (at least 7 digits)
+
     if (!RegExp(r'^\d{7,}$').hasMatch(value)) {
       return 'Please enter a valid phone number.';
     }
