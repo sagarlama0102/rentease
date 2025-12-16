@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(
                   "Best Offers",
                   style: TextStyle(
@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(
                   "Discover unbeatable deals on your nearest area",
                   style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -109,7 +109,10 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        CircleAvatar(radius: 20, backgroundColor: Colors.grey.shade200),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(radius: 25, backgroundColor: Colors.grey.shade200),
+        ),
       ],
     );
   }
