@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rentease/screens/bottom_screen_layout.dart';
-import 'package:rentease/screens/dashboard_screen.dart';
 import 'package:rentease/screens/signup_screen.dart';
 
 
