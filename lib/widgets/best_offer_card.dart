@@ -63,7 +63,7 @@ class BestOfferCard extends StatelessWidget {
                     SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.location_on, color: Colors.white, size: 16),
+                        Icon(Icons.location_on, color: Colors.white, size: 20),
                         SizedBox(width: 4),
                         Expanded(
                           child: Text(
@@ -98,6 +98,7 @@ class BestOfferCard extends StatelessWidget {
               child: CircleAvatar(
                 radius: 24,
                 backgroundColor: Colors.white,
+                backgroundImage:  AssetImage('assets/images/personimage.png'),
               ),
             ),
           ],
