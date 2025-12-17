@@ -41,6 +41,16 @@ final List<Property> bestOffers = [
     imageUrl: 'assets/images/onboardingtwoimage.png',
     isBestOffer: true,
   ),
+  Property(
+    title: "House of Ronak",
+    price: 'NRP 8000/month',
+    location: '44600 Narayanhiti Palace Museum, Baluwatar, Kathmandu',
+    beds: 4,
+    baths: 3,
+    area: '500sq',
+    imageUrl: 'assets/images/onboardingtwoimage.png',
+    isBestOffer: true,
+  ),
 ];
 
 final List<Property> nearestProperties = [
@@ -51,6 +61,26 @@ final List<Property> nearestProperties = [
     beds: 5,
     baths: 4,
     area: '800sq',
+    imageUrl: 'assets/images/onboardingtwoimage.png',
+    isBestOffer: true,
+  ),
+  Property(
+    title: "House of Sugar",
+    price: 'NRP 10000/month',
+    location: '44600 Narayanhiti Palace Museum, Baluwatar, Kathmandu',
+    beds: 5,
+    baths: 4,
+    area: '900sq',
+    imageUrl: 'assets/images/onboardingtwoimage.png',
+    isBestOffer: true,
+  ),
+  Property(
+    title: "House of Sugar",
+    price: 'NRP 10000/month',
+    location: '44600 Narayanhiti Palace Museum, Baluwatar, Kathmandu',
+    beds: 5,
+    baths: 4,
+    area: '900sq',
     imageUrl: 'assets/images/onboardingtwoimage.png',
     isBestOffer: true,
   ),

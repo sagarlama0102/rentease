@@ -67,16 +67,27 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              ...nearestProperties
-                  .map(
-                    (property) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                      ),
-                      child: NearestPropertyRow(property: property),
-                    ),
-                  )
-                  .toList(),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: nearestProperties.length,
+                 itemBuilder: (context,index){
+                return Padding(padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                child: NearestPropertyRow(property: nearestProperties[index],
+                ),
+                );
+              },
+              ),
+              // ...nearestProperties
+              //     .map(
+              //       (property) => Padding(
+              //         padding: const EdgeInsets.symmetric(
+              //           horizontal: 12,
+              //         ),
+              //         child: NearestPropertyRow(property: property),
+              //       ),
+              //     )
+              //     .toList(),
               SizedBox(height: 20),
             ],
           ),
