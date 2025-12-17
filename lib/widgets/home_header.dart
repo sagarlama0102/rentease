@@ -30,7 +30,7 @@ class HomeHeader extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(radius: 25, backgroundColor: Colors.grey.shade200),
+          child: CircleAvatar(radius: 25, backgroundColor: Colors.grey.shade200,backgroundImage: AssetImage('assets/images/personimage.png'),),
         ),
       ],
     );
