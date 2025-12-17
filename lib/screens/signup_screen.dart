@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:rentease/screens/dashboard_screen.dart';
 import 'package:rentease/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -43,7 +42,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (value == null || value.isEmpty) {
       return 'Please enter your phone number.';
     }
-    // Basic phone number validation (at least 7 digits)
+
     if (!RegExp(r'^\d{7,}$').hasMatch(value)) {
       return 'Please enter a valid phone number.';
     }
@@ -67,11 +66,16 @@ class _SignupScreenState extends State<SignupScreen> {
     if (value != _password) {
       return 'Passwords do not match.';
     }
+    // Force re-validation of password field if confirm changes, to show mismatch error if any
+    if (value != _passwordController.text) {
+      return 'Passwords do not match.';
+    }
     return null;
   }
 
   void _submitSignup() {
     if (_formKey.currentState!.validate()) {
+      // For demonstration, navigate to LoginScreen, you would handle actual sign-up here
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -146,36 +150,50 @@ class _SignupScreenState extends State<SignupScreen> {
                         child: Column(
                           children: [
                             
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                              child: TextFormField(
-                                keyboardType: TextInputType.name,
-                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
-                                decoration: _buildInputDecoration(
-                                  labelText: "First Name", 
-                                  hintText: "Enter your first name", 
-                                  icon: Icons.person
+                            // **MODIFICATION STARTS HERE**
+                            // Wrap First Name and Last Name in a Row
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start, // Align fields to the top
+                              children: [
+                                // First Name Field
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 15, right: 7.5, top: 8, bottom: 8), // Adjusted padding for split fields
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.name,
+                                      style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
+                                      decoration: _buildInputDecoration(
+                                        labelText: "First Name", 
+                                        hintText: "Enter your first name", 
+                                        icon: Icons.person
+                                      ),
+                                      validator: (value) => _validateName(value, 'first name'),
+                                    ),
+                                  ),
                                 ),
-                                validator: (value) => _validateName(value, 'first name'),
-                              ),
-                            ),
-                            
-                            
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-                              child: TextFormField(
-                                keyboardType: TextInputType.name,
-                                style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
-                                decoration: _buildInputDecoration(
-                                  labelText: "Last Name", 
-                                  hintText: "Enter your last name", 
-                                  icon: Icons.person_outline
+                                
+                                // Last Name Field
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 7.5, right: 15, top: 8, bottom: 8), // Adjusted padding for split fields
+                                    child: TextFormField(
+                                      keyboardType: TextInputType.name,
+                                      style: const TextStyle(color: Color.fromARGB(255, 78, 78, 78)),
+                                      decoration: _buildInputDecoration(
+                                        labelText: "Last Name", 
+                                        hintText: "Enter your last name", 
+                                        icon: Icons.person_outline
+                                      ),
+                                      validator: (value) => _validateName(value, 'last name'),
+                                    ),
+                                  ),
                                 ),
-                                validator: (value) => _validateName(value, 'last name'),
-                              ),
+                              ],
                             ),
+                            // **MODIFICATION ENDS HERE**
 
                             
+                            // Email Field (Unchanged)
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                               child: TextFormField(
@@ -191,6 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             
                             
+                            // Phone Number Field (Unchanged)
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                               child: TextFormField(
@@ -205,7 +224,8 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
 
-                           
+                            
+                            // Set Password Field (Unchanged)
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                               child: TextFormField(
@@ -239,6 +259,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             ),
                             
                             
+                            // Confirm Password Field (Unchanged)
                             Padding(
                               
                               padding: const EdgeInsets.fromLTRB(15, 8, 15, 0),
@@ -330,7 +351,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       const SizedBox(height: 50),
 
 
-                      ],
+                    ],
                   ),
                 ),
               );
@@ -340,6 +361,7 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
+  // The _buildInputDecoration function remains exactly the same.
   InputDecoration _buildInputDecoration({
     required String labelText,
     required String hintText,
