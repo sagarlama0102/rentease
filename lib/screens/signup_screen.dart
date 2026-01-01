@@ -94,6 +94,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    // //auth state
+    // final authState = ref.watch(authViewModelProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(

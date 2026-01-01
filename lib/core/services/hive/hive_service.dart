@@ -14,6 +14,7 @@ class HiveService {
 
     final path = '${directory.path}/${HiveTableConstants.dbName}';
     Hive.init(path);
+    await openBoxes();
     _registerAdapter();
   }
 
@@ -22,7 +23,7 @@ class HiveService {
       Hive.registerAdapter(AuthHiveModelAdapter());
     }
   }
-
+  // open Boxes
   Future<void> openBoxes() async {
     await Hive.openBox<AuthHiveModel>(HiveTableConstants.authTable);
   }
