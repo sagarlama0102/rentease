@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/routes/app_routes.dart';
+import 'package:rentease/features/onboarding/presentation/pages/onboarding_page.dart';
 import 'package:rentease/screens/onboarding_combine_screen.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
@@ -80,7 +81,7 @@ class _SplashPageState extends ConsumerState<SplashPage>
   Future<void> _navigateToNext() async {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
-    AppRoutes.pushReplacement(context, const OnboardingCombineScreen());
+    AppRoutes.pushReplacement(context, const OnboardingPage());
   }
 
   @override

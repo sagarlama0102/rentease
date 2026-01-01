@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:rentease/app/theme/app_theme.dart';
-import 'package:rentease/screens/splash_screen.dart';
+import 'package:rentease/features/splash/presentation/pages/splash_page.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -14,7 +14,7 @@ class App extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      home:  SplashScreen(),
+      home:  SplashPage(),
     );
   }
 }
