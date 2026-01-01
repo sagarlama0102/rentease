@@ -1,9 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rentease/core/constants/hive_table_constants.dart';
 import 'package:rentease/features/auth/data/models/auth_hive_model.dart';
 
-class HiveSercice {
+final hiveServiceProvider = Provider<HiveService>((ref) {
+  return HiveService();
+});
+class HiveService {
   //database init
   Future<void> init() async {
     final directory = await getApplicationDocumentsDirectory();

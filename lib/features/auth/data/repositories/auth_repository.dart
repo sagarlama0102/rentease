@@ -1,9 +1,16 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/core/error/failures.dart';
 import 'package:rentease/features/auth/data/datasources/auth_datasource.dart';
+import 'package:rentease/features/auth/data/datasources/local/auth_local_datasource.dart';
 import 'package:rentease/features/auth/data/models/auth_hive_model.dart';
 import 'package:rentease/features/auth/domain/entities/auth_entity.dart';
 import 'package:rentease/features/auth/domain/repositories/auth_repository.dart';
+
+// provider
+final authRepositoryProvider = Provider<IAuthRepository>((ref) {
+  return AuthRepository(authDatasource: ref.read(authLocalDatasourceProvider));
+});
 
 class AuthRepository implements IAuthRepository {
   final IAuthDatasource _authDatasource;

@@ -1,11 +1,19 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/core/services/hive/hive_service.dart';
 import 'package:rentease/features/auth/data/datasources/auth_datasource.dart';
 import 'package:rentease/features/auth/data/models/auth_hive_model.dart';
 
-class AuthLocalDatasource implements IAuthDatasource {
-  final HiveSercice _hiveService;
+// Provider
 
-  AuthLocalDatasource({required HiveSercice hiveService})
+final authLocalDatasourceProvider = Provider<AuthLocalDatasource>((ref) {
+  final hiveService = ref.watch(hiveServiceProvider);
+  return AuthLocalDatasource(hiveService: hiveService);
+});
+
+class AuthLocalDatasource implements IAuthDatasource {
+  final HiveService _hiveService;
+
+  AuthLocalDatasource({required HiveService hiveService})
     : _hiveService = hiveService;
 
   @override
