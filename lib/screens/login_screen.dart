@@ -82,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Form(
-              
               key: _fromKey,
               child: Column(
                 children: [
