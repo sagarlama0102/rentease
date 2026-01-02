@@ -6,7 +6,7 @@ class AppColors {
   // Primary Colors - Modern Gradient Blue/Purple
   static const Color primary = Color(0xFF6C63FF);
   static const Color primaryDark = Color(0xFF5B54E8);
-  static const Color primaryLight = Color(0xFF8F87FF);
+  static const Color primaryLight = Color(0xff99DAB3);
 
   // Secondary Colors
   static const Color secondary = Color(0xFFFF6584);
@@ -41,7 +41,7 @@ class AppColors {
   static const Color info = Color(0xFF3B82F6);
 
   // Login/Auth Colors (Blue theme)
-  static const Color authPrimary = Color(0xFF2196F3);
+  static const Color authPrimary = Color(0xff142725);
 
   // Item Status Colors
   static const Color lostColor = Color(0xFFE53935);

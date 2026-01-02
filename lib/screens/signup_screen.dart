@@ -305,10 +305,10 @@
 //                             ),
 //                             backgroundColor: Color(0xff142725),
 //                             foregroundColor: Colors.white,
-//                             textStyle: const TextStyle(
-//                               fontSize: 20,
-//                               fontWeight: FontWeight.w700,
-//                             ),
+                            // textStyle: const TextStyle(
+                            //   fontSize: 20,
+                            //   fontWeight: FontWeight.w700,
+                            // ),
 //                           ),
 //                           child: const Row(
 //                             mainAxisAlignment: MainAxisAlignment.center,

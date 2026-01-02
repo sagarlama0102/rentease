@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/theme/app_colors.dart';
 import 'package:rentease/app/theme/theme_extensions.dart';
 import 'package:rentease/core/utils/snackbar_utils.dart';
-import 'package:rentease/core/widgets/gradient_button.dart';
 import 'package:rentease/features/auth/presentation/state/auth_state.dart';
 import 'package:rentease/features/auth/presentation/view_model/auth_view_model.dart';
 
@@ -330,11 +329,44 @@ class _SignupPageState extends ConsumerState<SignupPage> {
 
                       // Sign Up Button and Login Link go here...
                       // Sign Up Button
-                      GradientButton(
-                        text: 'Create Account',
-                        onPressed: _handleSignup,
-                        isLoading: authState.status == AuthStatus.loading,
+                      SizedBox(
+                    height: 56,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: ElevatedButton(
+                      onPressed: _handleSignup,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.authPrimary,
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
+                      child: authState.status == AuthStatus.loading
+                          ? const SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              'Create an Account',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ),
+                  ),
+                      // GradientButton(
+                      //   text: 'Create Account',
+                      //   onPressed: _handleSignup,
+                      //   isLoading: authState.status == AuthStatus.loading,
+                      // ),
                       const SizedBox(height: 32),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -351,7 +383,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                             child: Text(
                               'Login',
                               style: TextStyle(
-                                color: AppColors.primary,
+                                color: AppColors.primaryLight,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,
                               ),
