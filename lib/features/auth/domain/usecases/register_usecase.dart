@@ -14,6 +14,7 @@ class RegisterUsecaseParams extends Equatable {
   final String? phoneNumber;
   final String username;
   final String password;
+  final String confirmPassword;
 
   const RegisterUsecaseParams({
     required this.firstName,
@@ -22,6 +23,7 @@ class RegisterUsecaseParams extends Equatable {
     this.phoneNumber,
     required this.username,
     required this.password,
+    required this.confirmPassword,
   });
 
   @override
@@ -33,8 +35,10 @@ class RegisterUsecaseParams extends Equatable {
     phoneNumber,
     username,
     password,
+    confirmPassword,
   ];
 }
+
 //provider
 final registerUsecaseProvider = Provider<RegisterUsecase>((ref) {
   final authRepository = ref.read(authRepositoryProvider);
@@ -56,6 +60,7 @@ class RegisterUsecase
       phoneNumber: params.phoneNumber,
       username: params.username,
       password: params.password,
+      confirmPassword: params.confirmPassword,
     );
     return _authRepository.register(entity);
   }

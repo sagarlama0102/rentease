@@ -47,6 +47,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
             username: _emailController.text.trim().split('@').first,
             password: _passwordController.text,
             phoneNumber: _phoneController.text,
+            confirmPassword: _confirmPasswordController.text,
           );
     }
   }

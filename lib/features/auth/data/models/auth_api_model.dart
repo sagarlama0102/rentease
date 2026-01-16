@@ -8,6 +8,7 @@ class AuthApiModel {
   final String? phoneNumber;
   final String username;
   final String? password;
+  final String? confirmPassword;
 
   const AuthApiModel({
     this.id,
@@ -17,28 +18,32 @@ class AuthApiModel {
     required this.username,
     this.phoneNumber,
     this.password,
+    this.confirmPassword,
   });
 
   //toJson
   Map<String, dynamic> toJson() {
     return {
-      "firstname": firstName,
-      "lastname": lastName,
+      "firstName": firstName,
+      "lastName": lastName,
       "email": email,
       "phoneNumber": phoneNumber,
       "username": username,
       "password": password,
+      "confirmPassword": confirmPassword,
     };
   }
 
   //fromJson
   factory AuthApiModel.fromJson(Map<String, dynamic> json) {
     return AuthApiModel(
-      id: json['_id'] as String,
-      firstName: json['firstname'] as String,
-      lastName: json['lastname'] as String,
+      id: json['_id'] as String?,
+      firstName: json['firstName'] as String,
+      lastName: json['lastName'] as String,
       email: json['email'] as String,
       username: json['username'] as String,
+      phoneNumber: json['phoneNumber'] as String,
+      password: json['password'] as String?,
     );
   }
 
@@ -50,6 +55,8 @@ class AuthApiModel {
       lastName: lastName,
       email: email,
       username: username,
+      phoneNumber: phoneNumber,
+      password: password,
     );
   }
 
@@ -62,6 +69,7 @@ class AuthApiModel {
       phoneNumber: entity.phoneNumber,
       username: entity.username,
       password: entity.password,
+      confirmPassword: entity.confirmPassword,
     );
   }
   //toEntityList

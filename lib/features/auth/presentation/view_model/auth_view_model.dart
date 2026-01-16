@@ -27,6 +27,7 @@ class AuthViewModel extends Notifier<AuthState> {
     String? phoneNumber,
     required String username,
     required String password,
+    required String confirmPassword,
   }) async {
     state = state.copyWith(status: AuthStatus.loading);
     //wait for 2 sec
@@ -38,6 +39,7 @@ class AuthViewModel extends Notifier<AuthState> {
       phoneNumber: phoneNumber,
       username: username,
       password: password,
+      confirmPassword: confirmPassword,
     );
     final result = await _registerUsecase(params);
 
