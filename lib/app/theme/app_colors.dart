@@ -135,7 +135,7 @@ class AppColors {
 
   // Dark Text Colors
   static const Color darkTextPrimary = Color(0xFFE8EAED);
-  static const Color darkTextSecondary = Color(0xFFB4B8BB);
+  static const Color darkTextSecondary = Color(0xFFE8EAED);
   static const Color darkTextTertiary = Color(0xFF7C8186);
 
   // Dark Border & Divider
