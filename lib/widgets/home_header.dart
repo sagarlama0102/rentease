@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentease/app/theme/app_colors.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -22,7 +23,7 @@ class HomeHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+                  color: AppColors.darkTextSecondary,
                 ),
               ),
             ],

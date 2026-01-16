@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentease/app/theme/app_colors.dart';
 import 'package:rentease/models/property.dart';
 import 'package:rentease/widgets/icon_badge.dart';
 
@@ -40,7 +41,7 @@ class NearestPropertyRow extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: AppColors.darkTextSecondary,
                   ),
                 ),
                 SizedBox(height: 4),

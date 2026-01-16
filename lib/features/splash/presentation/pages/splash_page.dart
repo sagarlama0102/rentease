@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/routes/app_routes.dart';
+import 'package:rentease/core/services/storage/user_session_service.dart';
 import 'package:rentease/features/onboarding/presentation/pages/onboarding_page.dart';
+import 'package:rentease/screens/bottom_screen_layout.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -80,7 +82,15 @@ class _SplashPageState extends ConsumerState<SplashPage>
   Future<void> _navigateToNext() async {
     await Future.delayed(const Duration(seconds: 3));
     if (!mounted) return;
-    AppRoutes.pushReplacement(context, const OnboardingPage());
+    //check gara if user is already loggedin
+    final userSessionService = ref.read(userSessionServiceProvider);
+    final isLoggedIn = userSessionService.isLoggedIn();
+
+    if(isLoggedIn){
+      AppRoutes.pushReplacement(context, const BottomScreenLayout());
+    }else{
+      AppRoutes.pushReplacement(context, const OnboardingPage());
+    }
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentease/app/theme/app_colors.dart';
 import 'package:rentease/models/property.dart';
 import 'package:rentease/widgets/best_offer_card.dart';
 import 'package:rentease/widgets/home_header.dart';
@@ -26,13 +27,13 @@ class HomeScreen extends StatelessWidget {
               ),
 
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                 child: Text(
                   "Best Offers",
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: AppColors.darkTextSecondary,
                   ),
                 ),
               ),
@@ -65,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: AppColors.darkTextSecondary,
                   ),
                 ),
               ),
