@@ -19,6 +19,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final List<XFile> _selectedMedia = [];
   final ImagePicker _imagePicker = ImagePicker();
+  final String _baseUrl = "http://192.168.101.11:4000";
   String? _selectedMediaType;
   String? _profilePictureUrl;
 
@@ -247,9 +248,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   : (authState.authEntity?.profilePicture !=
                                                 null // Adjust 'image' based on your user entity
                                             ? NetworkImage(
+                                              '$_baseUrl${
                                                 authState
                                                     .authEntity!
-                                                    .profilePicture!,
+                                                    .profilePicture!}'
                                               )
                                             : null)
                                         as ImageProvider?,
@@ -257,14 +259,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   (_selectedMedia.isEmpty &&
                                       authState.authEntity?.profilePicture ==
                                           null)
-                                  ? const Text(
-                                      "J",
-                                      style: TextStyle(
-                                        fontSize: 48,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(0xff6A5AE0),
-                                      ),
-                                    )
+                                  ? Icon(Icons.person)
                                   : (authState.status ==
                                         AuthStatus
                                             .loading) // Show loader while uploading
