@@ -9,6 +9,7 @@ class AuthApiModel {
   final String username;
   final String? password;
   final String? confirmPassword;
+  final String? profilePicture;
 
   const AuthApiModel({
     this.id,
@@ -18,6 +19,7 @@ class AuthApiModel {
     required this.username,
     this.phoneNumber,
     this.password,
+    this.profilePicture,
     this.confirmPassword,
   });
 
@@ -31,6 +33,7 @@ class AuthApiModel {
       "username": username,
       "password": password,
       "confirmPassword": confirmPassword,
+      "profilePicture": profilePicture,
     };
   }
 
@@ -43,6 +46,7 @@ class AuthApiModel {
       email: json['email'] as String,
       username: json['username'] as String,
       phoneNumber: json['phoneNumber'] as String,
+      profilePicture: json['profilePicture'] as String?,
       password: json['password'] as String?,
     );
   }
@@ -57,6 +61,7 @@ class AuthApiModel {
       username: username,
       phoneNumber: phoneNumber,
       password: password,
+      profilePicture: profilePicture,
     );
   }
 
@@ -70,6 +75,7 @@ class AuthApiModel {
       username: entity.username,
       password: entity.password,
       confirmPassword: entity.confirmPassword,
+      profilePicture: entity.profilePicture,
     );
   }
   //toEntityList

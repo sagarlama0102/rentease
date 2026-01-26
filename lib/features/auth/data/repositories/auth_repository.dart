@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,7 +57,7 @@ class AuthRepository implements IAuthRepository {
     String email,
     String password,
   ) async {
-    if(await _networkInfo.isConnected){
+    if (await _networkInfo.isConnected) {
       try {
         final apiModel = await _authRemoteDataSource.login(email, password);
         if (apiModel != null) {
@@ -73,19 +75,18 @@ class AuthRepository implements IAuthRepository {
       } catch (e) {
         return Left(ApiFailure(message: e.toString()));
       }
-    }else{
+    } else {
       try {
-      final user = await _authDatasource.login(email, password);
-      if (user != null) {
-        final entity = user.toEntity();
-        return Right(entity);
+        final user = await _authDatasource.login(email, password);
+        if (user != null) {
+          final entity = user.toEntity();
+          return Right(entity);
+        }
+        return Left(LocalDatabaseFailure(message: 'Invalid email or password'));
+      } catch (e) {
+        return Left(LocalDatabaseFailure(message: e.toString()));
       }
-      return Left(LocalDatabaseFailure(message: 'Invalid email or password'));
-    } catch (e) {
-      return Left(LocalDatabaseFailure(message: e.toString()));
     }
-    }
-    
   }
 
   @override
@@ -103,8 +104,8 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Future<Either<Failure, bool>> register(AuthEntity user) async {
-    if (await _networkInfo.isConnected){
-    // remote ma ja
+    if (await _networkInfo.isConnected) {
+      // remote ma ja
       try {
         final apiModel = AuthApiModel.fromEntity(user);
         await _authRemoteDataSource.register(apiModel);
@@ -119,19 +120,32 @@ class AuthRepository implements IAuthRepository {
       } catch (e) {
         return Left(ApiFailure(message: e.toString()));
       }
-    }else{
+    } else {
       try {
-      //model ma convert gara
-      final model = AuthHiveModel.fromEntity(user);
-      final result = await _authDatasource.register(model);
-      if (result) {
-        return Right(true);
+        //model ma convert gara
+        final model = AuthHiveModel.fromEntity(user);
+        final result = await _authDatasource.register(model);
+        if (result) {
+          return Right(true);
+        }
+        return Left(LocalDatabaseFailure(message: "Failed to register user"));
+      } catch (e) {
+        return Left(LocalDatabaseFailure(message: e.toString()));
       }
-      return Left(LocalDatabaseFailure(message: "Failed to register user"));
-    } catch (e) {
-      return Left(LocalDatabaseFailure(message: e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadPhoto(File photo) async {
+    if (await _networkInfo.isConnected) {
+      try {
+        final url = await _authRemoteDataSource.uploadPhoto(photo);
+        return Right(url);
+      } catch (e) {
+        return Left(ApiFailure(message: e.toString()));
+      }
+    } else {
+      return const Left(NetworkFailure(message: 'No internet connection'));
     }
-    
   }
 }

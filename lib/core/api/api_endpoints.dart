@@ -2,7 +2,7 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   // Base URL - change this for production
-  static const String baseUrl = 'http://10.12.16.155:4000/api/';
+  static const String baseUrl = 'http://192.168.101.11:4000/api/';
   //static const String baseUrl = 'http://localhost:3000/api/v1';
   // For Android Emulator use: 'http://10.0.2.2:3000/api/v1'
   // For iOS Simulator use: 'http://localhost:5000/api/v1'
@@ -36,7 +36,8 @@ class ApiEndpoints {
   // static String commentsByItem(String itemId) => '/comments/item/$itemId';
   // static String commentLike(String id) => '/comments/$id/like';
 
-   static const String register = '/auth/register';
-   static const String login = '/auth/login';
-
+  static const String register = '/auth/register';
+  static const String login = '/auth/login';
+  //  static const String userUploadPhoto = '/auth/update-profile';
+  static const String userUploadPhoto = '/auth/update-profile';
 }

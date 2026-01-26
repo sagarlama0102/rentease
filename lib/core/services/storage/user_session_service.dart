@@ -25,6 +25,7 @@ class UserSessionService {
   static const String _keyUserFirstName = "user_first_name";
   static const String _keyUserLastName = "user_last_name";
   static const String _keyUserPhoneNumber = "user_phone_number";
+  static const String _keyUserProfilePicture = 'user_profile_picture';
 
   //store user session data
   Future<void> saveUserSession({
@@ -34,6 +35,7 @@ class UserSessionService {
     required String firstName,
     required String lastName,
     required String? phoneNumber,
+    String? profilePicture,
 
   })async {
     await _prefs.setBool(_keyIsLoggedIn, true);
@@ -46,6 +48,9 @@ class UserSessionService {
     if (phoneNumber != null) {
       await _prefs.setString(_keyUserPhoneNumber, phoneNumber);
     }
+    if (profilePicture != null) {
+      await _prefs.setString(_keyUserProfilePicture, profilePicture);
+    }
 
   }
   // clear user session data
@@ -57,6 +62,7 @@ class UserSessionService {
     await _prefs.remove(_keyUserPhoneNumber);
     await _prefs.remove(_keyUsername);
     await _prefs.remove(_keyUserEmail);
+    await _prefs.remove(_keyUserProfilePicture);
   }
   bool isLoggedIn() {
     return _prefs.getBool(_keyIsLoggedIn) ?? false;
@@ -85,6 +91,5 @@ class UserSessionService {
   String? getUserPhoneNumber() {
     return _prefs.getString(_keyUserPhoneNumber);
   }
-
 
 }
