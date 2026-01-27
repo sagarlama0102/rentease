@@ -19,7 +19,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final List<XFile> _selectedMedia = [];
   final ImagePicker _imagePicker = ImagePicker();
-  final String _baseUrl = "http://192.168.101.11:4000";
+  final String _baseUrl = "http://192.168.101.9:4000";
   String? _selectedMediaType;
   String? _profilePictureUrl;
 

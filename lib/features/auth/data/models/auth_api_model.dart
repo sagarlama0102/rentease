@@ -1,6 +1,11 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rentease/features/auth/domain/entities/auth_entity.dart';
 
+part 'auth_api_model.g.dart';
+
+@JsonSerializable()
 class AuthApiModel {
+  @JsonKey(name: '_id')
   final String? id;
   final String firstName;
   final String lastName;
@@ -23,33 +28,38 @@ class AuthApiModel {
     this.confirmPassword,
   });
 
-  //toJson
-  Map<String, dynamic> toJson() {
-    return {
-      "firstName": firstName,
-      "lastName": lastName,
-      "email": email,
-      "phoneNumber": phoneNumber,
-      "username": username,
-      "password": password,
-      "confirmPassword": confirmPassword,
-      "profilePicture": profilePicture,
-    };
-  }
+  factory AuthApiModel.fromJson(Map<String, dynamic> json) =>
+      _$AuthApiModelFromJson(json);
 
-  //fromJson
-  factory AuthApiModel.fromJson(Map<String, dynamic> json) {
-    return AuthApiModel(
-      id: json['_id'] as String?,
-      firstName: json['firstName'] as String,
-      lastName: json['lastName'] as String,
-      email: json['email'] as String,
-      username: json['username'] as String,
-      phoneNumber: json['phoneNumber'] as String,
-      profilePicture: json['profilePicture'] as String?,
-      password: json['password'] as String?,
-    );
-  }
+  Map<String, dynamic> toJson() => _$AuthApiModelToJson(this);
+
+  // //toJson
+  // Map<String, dynamic> toJson() {
+  //   return {
+  //     "firstName": firstName,
+  //     "lastName": lastName,
+  //     "email": email,
+  //     "phoneNumber": phoneNumber,
+  //     "username": username,
+  //     "password": password,
+  //     "confirmPassword": confirmPassword,
+  //     "profilePicture": profilePicture,
+  //   };
+  // }
+
+  // //fromJson
+  // factory AuthApiModel.fromJson(Map<String, dynamic> json) {
+  //   return AuthApiModel(
+  //     id: json['_id'] as String?,
+  //     firstName: json['firstName'] as String,
+  //     lastName: json['lastName'] as String,
+  //     email: json['email'] as String,
+  //     username: json['username'] as String,
+  //     phoneNumber: json['phoneNumber'] as String,
+  //     profilePicture: json['profilePicture'] as String?,
+  //     password: json['password'] as String?,
+  //   );
+  // }
 
   //toEntity
   AuthEntity toEntity() {
