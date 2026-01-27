@@ -64,4 +64,29 @@ class HiveService {
     final users = _authBox.values.where((user) => user.email == email);
     return users.isNotEmpty;
   }
+  // Get user by ID
+  AuthHiveModel? getUserById(String authId) {
+    return _authBox.get(authId);
+  }
+
+  // Get user by email
+  AuthHiveModel? getUserByEmail(String email) {
+    try {
+      return _authBox.values.firstWhere((user) => user.email == email);
+    } catch (e) {
+      return null;
+    }
+  }
+  // Update user
+  Future<bool> updateUser(AuthHiveModel user) async {
+    if (_authBox.containsKey(user.authId)) {
+      await _authBox.put(user.authId, user);
+      return true;
+    }
+    return false;
+  }
+  // Delete user
+  Future<void> deleteUser(String authId) async {
+    await _authBox.delete(authId);
+  }
 }

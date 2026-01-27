@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rentease/app/routes/app_routes.dart';
 import 'package:rentease/app/theme/app_colors.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rentease/app/theme/theme_extensions.dart';
 import 'package:rentease/core/utils/snackbar_utils.dart';
+import 'package:rentease/features/auth/presentation/pages/login_page.dart';
 import 'package:rentease/features/auth/presentation/state/auth_state.dart';
 import 'package:rentease/features/auth/presentation/view_model/auth_view_model.dart';
 
@@ -248,10 +250,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   : (authState.authEntity?.profilePicture !=
                                                 null // Adjust 'image' based on your user entity
                                             ? NetworkImage(
-                                              '$_baseUrl${
-                                                authState
-                                                    .authEntity!
-                                                    .profilePicture!}'
+                                                '$_baseUrl${authState.authEntity!.profilePicture!}',
                                               )
                                             : null)
                                         as ImageProvider?,
@@ -322,17 +321,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
-                  children: const [
+                  children:  [
                     _MenuItem(
                       icon: Icons.person_outline,
                       title: "Edit Profile",
+                      isDestructive: false,
+                      onTap: () {},
                     ),
-                    SizedBox(height: 12, width: 20),
+                    SizedBox(height: 12),
 
                     _MenuItem(
                       icon: Icons.logout,
                       title: "Logout",
                       isDestructive: true,
+                      onTap: () {
+                        _showLogoutDialog(context);
+                      },
                     ),
                   ],
                 ),
@@ -345,16 +349,55 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       ),
     );
   }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: context.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(dialogContext);
+              // Clear user session
+              await ref.read(authViewModelProvider.notifier).logout();
+              if (context.mounted) {
+                AppRoutes.pushAndRemoveUntil(context, const LoginPage());
+              }
+            },
+            child: Text(
+              'Logout',
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _MenuItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool isDestructive;
+  final VoidCallback onTap;
 
   const _MenuItem({
     required this.icon,
     required this.title,
+    required this.onTap,
     this.isDestructive = false,
   });
 
@@ -391,7 +434,7 @@ class _MenuItem extends StatelessWidget {
           ),
         ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }
