@@ -79,6 +79,7 @@ dependencies:
 
   uuid: ^4.3.3
   intl: ^0.20.2
+  test_cov_console: ^0.2.2
 
 
 dev_dependencies:
@@ -91,6 +92,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  mocktail: ^1.0.4
 
   # Code Generation
   build_runner: ^2.4.13
