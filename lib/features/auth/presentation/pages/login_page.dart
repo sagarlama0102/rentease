@@ -119,6 +119,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: TextFormField(
+                     
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       style: TextStyle(color: textColor),
@@ -143,6 +144,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.all(15),
                     child: TextFormField(
+                      
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       style: TextStyle(color: textColor),
@@ -196,6 +198,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     height: 56,
                     width: MediaQuery.of(context).size.width * 0.9,
                     child: ElevatedButton(
+                      
                       onPressed: _isLoading ? null : _handleLogin,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.authPrimary,

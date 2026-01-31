@@ -373,7 +373,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Already have an account? ',
+                            'Already have an account?',
                             style: TextStyle(
                               color: context.textSecondary,
                               fontSize: 15,

@@ -1,0 +1,390 @@
+import 'dart:async';
+
+import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:rentease/core/error/failures.dart';
+import 'package:rentease/core/services/storage/user_session_service.dart';
+import 'package:rentease/features/auth/domain/entities/auth_entity.dart';
+import 'package:rentease/features/auth/domain/usecases/get_current_user_usecase.dart';
+import 'package:rentease/features/auth/domain/usecases/login_usecase.dart';
+import 'package:rentease/features/auth/domain/usecases/logout_usecase.dart';
+import 'package:rentease/features/auth/domain/usecases/register_usecase.dart';
+import 'package:rentease/features/auth/presentation/pages/login_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+//Mock Navigator Observer to track navigation
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class MockRegisterUsecase extends Mock implements RegisterUsecase {}
+
+class MockLoginUsecase extends Mock implements LoginUsecase {}
+
+class MockGetCurrentUserUsecase extends Mock implements GetCurrentUserUsecase {}
+
+class MockLogoutUsecase extends Mock implements LogoutUsecase {}
+
+class MockSharedPreferences extends Mock implements SharedPreferences {}
+
+void main() {
+  late MockRegisterUsecase mockRegisterUsecase;
+  late MockLoginUsecase mockLoginUsecase;
+  late MockGetCurrentUserUsecase mockGetCurrentUserUsecase;
+  late MockLogoutUsecase mockLogoutUsecase;
+
+  setUpAll(() {
+    registerFallbackValue(
+      const RegisterUsecaseParams(
+        firstName: 'fall',
+        lastName: 'back',
+        email: 'fallback@email.com',
+        username: 'fallback',
+        password: 'fallback',
+        confirmPassword: 'fallback',
+      ),
+    );
+    registerFallbackValue(
+      const LoginUsecaseParams(
+        email: 'fallback@email.com',
+        password: 'fallback',
+      ),
+    );
+  });
+
+  setUp(() {
+    mockRegisterUsecase = MockRegisterUsecase();
+    mockLoginUsecase = MockLoginUsecase();
+    mockGetCurrentUserUsecase = MockGetCurrentUserUsecase();
+    mockLogoutUsecase = MockLogoutUsecase();
+  });
+
+  Widget createTestWidget() {
+    return ProviderScope(
+      overrides: [
+        registerUsecaseProvider.overrideWithValue(mockRegisterUsecase),
+        loginUsecaseProvider.overrideWithValue(mockLoginUsecase),
+        getCurrentUserUsecaseProvider.overrideWithValue(
+          mockGetCurrentUserUsecase,
+        ),
+        logoutUsecaseProvider.overrideWithValue(mockLogoutUsecase),
+        sharedPreferencesProvider.overrideWithValue(MockSharedPreferences()),
+      ],
+      child: const MaterialApp(home: LoginPage()),
+    );
+  }
+
+  group('LoginPage UI Elements', () {
+    testWidgets('should display LogIn text', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+      await tester.pumpAndSettle();
+
+      // 1. Header RichText Check
+      final richTextFinder = find.byType(RichText);
+      expect(richTextFinder, findsAtLeastNWidgets(1));
+
+      final RichText headerWidget = tester.widget(richTextFinder.first);
+      final String headerText = headerWidget.text.toPlainText();
+      expect(headerText, contains('Log'));
+      expect(headerText, contains('In'));
+    });
+
+    testWidgets('should display email and password labels', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.text('Email'), findsOneWidget);
+      expect(find.text('Password'), findsOneWidget);
+    });
+
+    testWidgets('should display login button', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.text('Login'), findsOneWidget);
+      expect(find.byType(ElevatedButton), findsOneWidget);
+    });
+
+    testWidgets('should display two text form fields', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.byType(TextFormField), findsNWidgets(2));
+    });
+
+    testWidgets('should display email icon', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.byIcon(Icons.email_outlined), findsOneWidget);
+    });
+
+    testWidgets('should display lock icon', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.byIcon(Icons.lock_outline), findsOneWidget);
+    });
+
+    testWidgets('should display visibility icon for password', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+    });
+
+    testWidgets('should toggle password visibility', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.visibility_outlined));
+      await tester.pump();
+
+      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+    });
+
+    testWidgets('should display forgot password button', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.text('Forgot Password?'), findsOneWidget);
+    });
+
+    testWidgets('should display signup link text', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.text("Don't have an account? "), findsOneWidget);
+      expect(find.text('Sign Up'), findsOneWidget);
+    });
+
+    testWidgets('should display hint texts', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      expect(find.text('Enter your email'), findsOneWidget);
+      expect(find.text('Enter your password'), findsOneWidget);
+    });
+  });
+
+  group('LoginPage Form Validation', () {
+    testWidgets('should show error for empty email', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      await tester.enterText(find.byType(TextFormField).last, 'password123');
+      await tester.tap(find.text('Login'));
+      await tester.pump();
+
+      expect(find.text('Please enter your email'), findsOneWidget);
+    });
+
+    testWidgets('should show error for invalid email', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      await tester.enterText(find.byType(TextFormField).first, 'invalidemail');
+      await tester.enterText(find.byType(TextFormField).last, 'password123');
+      await tester.tap(find.text('Login'));
+      await tester.pump();
+
+      expect(find.text('Please enter a valid email'), findsOneWidget);
+    });
+
+    testWidgets('should show error for empty password', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      await tester.enterText(
+        find.byType(TextFormField).first,
+        'test@example.com',
+      );
+      await tester.tap(find.text('Login'));
+      await tester.pump();
+
+      expect(find.text('Please enter your password'), findsOneWidget);
+    });
+
+    testWidgets('should show error for short password', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      await tester.enterText(
+        find.byType(TextFormField).first,
+        'test@example.com',
+      );
+      await tester.enterText(find.byType(TextFormField).last, '12345');
+      await tester.tap(find.text('Login'));
+      await tester.pump();
+
+      expect(
+        find.text('Password must be at least 6 characters'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('should allow text entry in email field', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      await tester.enterText(
+        find.byType(TextFormField).first,
+        'test@example.com',
+      );
+      await tester.pump();
+
+      expect(find.text('test@example.com'), findsOneWidget);
+    });
+
+    testWidgets('should allow text entry in password field', (tester) async {
+      await tester.pumpWidget(createTestWidget());
+
+      await tester.enterText(find.byType(TextFormField).last, 'password123');
+      await tester.pump();
+
+      // Password is obscured, so we verify by checking the field has content
+      final passwordField = tester.widget<TextFormField>(
+        find.byType(TextFormField).last,
+      );
+      expect(passwordField.controller?.text, 'password123');
+    });
+  });
+
+  // group('LoginPage Form Submission', () {
+  //   testWidgets('should call login usecase when form is valid', (tester) async {
+  //     // Arrange - Mock login to return a user (use completer to control timing)
+  //     final completer = Completer<Either<Failure, AuthEntity>>();
+  //     when(() => mockLoginUsecase(any())).thenAnswer((_) => completer.future);
+
+  //     await tester.pumpWidget(createTestWidget());
+
+  //     await tester.enterText(
+  //       find.byType(TextFormField).first,
+  //       'test@example.com',
+  //     );
+  //     await tester.enterText(find.byType(TextFormField).last, 'password123');
+
+  //     await tester.tap(find.text('Login'));
+  //     await tester.pump();
+
+  //     verify(() => mockLoginUsecase(any())).called(1);
+  //   });
+
+  //   testWidgets('should call login with correct email and password', (
+  //     tester,
+  //   ) async {
+  //     // Arrange - Use completer to prevent navigation
+  //     final completer = Completer<Either<Failure, AuthEntity>>();
+
+  //     LoginUsecaseParams? capturedParams;
+  //     when(() => mockLoginUsecase(any())).thenAnswer((invocation) {
+  //       capturedParams =
+  //           invocation.positionalArguments[0] as LoginUsecaseParams;
+  //       return completer.future;
+  //     });
+
+  //     await tester.pumpWidget(createTestWidget());
+
+  //     // Fill form fields
+  //     await tester.enterText(find.byType(TextFormField).first, 'user@test.com');
+  //     await tester.enterText(find.byType(TextFormField).last, 'mypassword');
+
+  //     // Tap login button
+  //     await tester.tap(find.text('Login'));
+  //     await tester.pump();
+
+  //     // Verify correct params were passed
+  //     expect(capturedParams?.email, 'user@test.com');
+  //     expect(capturedParams?.password, 'mypassword');
+  //   });
+
+  //   testWidgets('should not call login usecase when form is invalid', (
+  //     tester,
+  //   ) async {
+  //     await tester.pumpWidget(createTestWidget());
+
+  //     // Only fill email (password empty)
+  //     await tester.enterText(
+  //       find.byType(TextFormField).first,
+  //       'test@example.com',
+  //     );
+
+  //     // Tap login button
+  //     await tester.tap(find.text('Login'));
+  //     await tester.pump();
+
+  //     // Verify login usecase was NOT called
+  //     verifyNever(() => mockLoginUsecase(any()));
+  //   });
+
+  //   testWidgets('should show loading indicator while logging in', (
+  //     tester,
+  //   ) async {
+  //     // Arrange - Use completer to keep loading state
+  //     final completer = Completer<Either<Failure, AuthEntity>>();
+
+  //     when(() => mockLoginUsecase(any())).thenAnswer((_) => completer.future);
+
+  //     await tester.pumpWidget(createTestWidget());
+
+  //     // Fill form fields
+  //     await tester.enterText(
+  //       find.byType(TextFormField).first,
+  //       'test@example.com',
+  //     );
+  //     await tester.enterText(find.byType(TextFormField).last, 'password123');
+
+  //     // Tap login button
+  //     await tester.tap(find.text('Login'));
+  //     await tester.pump(); // Start the login
+
+  //     // Verify loading indicator is shown
+  //     expect(find.byType(CircularProgressIndicator), findsOneWidget);
+  //   });
+
+  //   testWidgets(
+  //     'should succeed with correct credentials and fail with wrong credentials',
+  //     (tester) async {
+  //       // Define correct credentials
+  //       const correctEmail = 'correct@test.com';
+  //       const correctPassword = 'correctpass';
+  //       const failure = ApiFailure(message: 'Invalid credentials');
+
+  //       List<LoginUsecaseParams> capturedParams = [];
+
+  //       // Mock login to check credentials using if condition
+  //       // Use a completer to prevent navigation on success
+  //       when(() => mockLoginUsecase(any())).thenAnswer((invocation) async {
+  //         final params =
+  //             invocation.positionalArguments[0] as LoginUsecaseParams;
+  //         capturedParams.add(params);
+
+  //         // Check if credentials are correct
+  //         if (params.email == correctEmail &&
+  //             params.password == correctPassword) {
+  //           // Return failure to avoid navigation issues in test
+  //           return const Left(ApiFailure(message: 'Test complete'));
+  //         }
+  //         return const Left(failure);
+  //       });
+
+  //       await tester.pumpWidget(createTestWidget());
+
+  //       // Test 1: Wrong email should fail
+  //       await tester.enterText(
+  //         find.byType(TextFormField).first,
+  //         'wrong@test.com',
+  //       );
+  //       await tester.enterText(
+  //         find.byType(TextFormField).last,
+  //         correctPassword,
+  //       );
+  //       await tester.tap(find.text('Login'));
+  //       await tester.pump();
+
+  //       // Test 2: Correct credentials (simulated)
+  //       await tester.enterText(find.byType(TextFormField).first, correctEmail);
+  //       await tester.enterText(
+  //         find.byType(TextFormField).last,
+  //         correctPassword,
+  //       );
+  //       await tester.tap(find.text('Login'));
+  //       await tester.pump();
+
+  //       // Verify login was called with different credentials
+  //       expect(capturedParams.length, 2);
+  //       expect(capturedParams[0].email, 'wrong@test.com');
+  //       expect(capturedParams[1].email, correctEmail);
+  //     },
+  //   );
+  // });
+}

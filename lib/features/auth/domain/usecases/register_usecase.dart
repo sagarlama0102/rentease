@@ -32,10 +32,10 @@ class RegisterUsecaseParams extends Equatable {
     firstName,
     lastName,
     email,
-    phoneNumber,
     username,
     password,
     confirmPassword,
+    phoneNumber,
   ];
 }
 

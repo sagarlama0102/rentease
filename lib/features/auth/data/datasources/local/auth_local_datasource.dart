@@ -26,9 +26,24 @@ class AuthLocalDatasource implements IAuthLocalDatasource {
        _userSessionService = userSessionService;
 
   @override
-  Future<AuthHiveModel?> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<AuthHiveModel?> getCurrentUser() async{
+    try {
+      // Check if user is logged in
+      if (!_userSessionService.isLoggedIn()) {
+        return null;
+      }
+
+      // Get user ID from session
+      final userId = _userSessionService.getUserId();
+      if (userId == null) {
+        return null;
+      }
+
+      // Fetch user from Hive database
+      return _hiveService.getUserById(userId);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -54,6 +69,7 @@ class AuthLocalDatasource implements IAuthLocalDatasource {
           firstName: user.firstName,
           lastName: user.lastName,
           phoneNumber: user.phoneNumber,
+          profilePicture: user.profilePicture,
         );
       }
       return user;
@@ -73,12 +89,49 @@ class AuthLocalDatasource implements IAuthLocalDatasource {
   }
 
   @override
+  Future<AuthHiveModel?> getUserById(String authId) async {
+    try {
+      return _hiveService.getUserById(authId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
   Future<bool> register(AuthHiveModel model) async {
     try {
       await _hiveService.registerUser(model);
       return Future.value(true);
     } catch (e) {
       return Future.value(false);
+    }
+  }
+
+  @override
+  Future<bool> updateUser(AuthHiveModel user) async {
+    try {
+      return await _hiveService.updateUser(user);
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> deleteUser(String authId) async {
+    try {
+      await _hiveService.deleteUser(authId);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  Future<AuthHiveModel?> getUserByEmail(String email) async {
+    try {
+      return _hiveService.getUserByEmail(email);
+    } catch (e) {
+      return null;
     }
   }
 }
