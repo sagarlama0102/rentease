@@ -14,6 +14,7 @@ class AuthApiModel {
   final String username;
   final String? password;
   final String? confirmPassword;
+  @JsonKey(includeIfNull: false)
   final String? profilePicture;
 
   const AuthApiModel({
