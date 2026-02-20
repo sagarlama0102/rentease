@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/routes/app_routes.dart';
 import 'package:rentease/core/services/storage/user_session_service.dart';
 import 'package:rentease/features/onboarding/presentation/pages/onboarding_page.dart';
-import 'package:rentease/screens/bottom_screen_layout.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen_layout.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});

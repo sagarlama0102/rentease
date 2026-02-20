@@ -6,7 +6,7 @@ import 'package:rentease/core/utils/snackbar_utils.dart';
 import 'package:rentease/features/auth/presentation/pages/signup_page.dart';
 import 'package:rentease/features/auth/presentation/state/auth_state.dart';
 import 'package:rentease/features/auth/presentation/view_model/auth_view_model.dart';
-import 'package:rentease/screens/bottom_screen_layout.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen_layout.dart';
 
 
 class LoginPage extends ConsumerStatefulWidget {

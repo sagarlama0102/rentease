@@ -2,7 +2,7 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   // Base URL - change this for production
-  static const String baseUrl = 'http://192.168.101.8:4000/api/';
+  static const String baseUrl = 'http://192.168.101.11:4000/api/';
   //static const String baseUrl = 'http://localhost:3000/api/v1';
   // For Android Emulator use: 'http://10.0.2.2:3000/api/v1'
   // For iOS Simulator use: 'http://localhost:5000/api/v1'
@@ -11,33 +11,13 @@ class ApiEndpoints {
   static const Duration connectionTimeout = Duration(seconds: 30);
   static const Duration receiveTimeout = Duration(seconds: 30);
 
-  // // ============ Batch Endpoints ============
-  // static const String batches = '/batches';
-  // static String batchById(String id) => '/batches/$id';
-
-  // // ============ Category Endpoints ============
-  // static const String categories = '/categories';
-  // static String categoryById(String id) => '/categories/$id';
-
-  // // ============ Student Endpoints ============
-  // static const String users = '/users';
-  // static const String userLogin = '/users/login';
-  // static String userById(String id) => '/users/$id';
-  // static String userPhoto(String id) => '/users/$id/photo';
-
-  // // ============ Item Endpoints ============
-  // static const String items = '/items';
-  // static String itemById(String id) => '/items/$id';
-  // static String itemClaim(String id) => '/items/$id/claim';
-
-  // // ============ Comment Endpoints ============
-  // static const String comments = '/comments';
-  // static String commentById(String id) => '/comments/$id';
-  // static String commentsByItem(String itemId) => '/comments/item/$itemId';
-  // static String commentLike(String id) => '/comments/$id/like';
-
   static const String register = '/auth/register';
   static const String login = '/auth/login';
   //  static const String userUploadPhoto = '/auth/update-profile';
   static const String userUploadPhoto = '/auth/update-profile';
+
+  //properties
+
+  static const String getAllProperty = '/properties';
+  static String getPropertyById(String id) => '/properties/$id';
 }

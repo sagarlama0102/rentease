@@ -3,10 +3,12 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rentease/core/constants/hive_table_constants.dart';
 import 'package:rentease/features/auth/data/models/auth_hive_model.dart';
+import 'package:rentease/features/dashboard/data/models/property_hive_model.dart';
 
 final hiveServiceProvider = Provider<HiveService>((ref) {
   return HiveService();
 });
+
 class HiveService {
   //database init
   Future<void> init() async {
@@ -14,7 +16,7 @@ class HiveService {
 
     final path = '${directory.path}/${HiveTableConstants.dbName}';
     Hive.init(path);
-   
+
     _registerAdapter();
     await openBoxes();
   }
@@ -23,10 +25,15 @@ class HiveService {
     if (!Hive.isAdapterRegistered(HiveTableConstants.authTypeId)) {
       Hive.registerAdapter(AuthHiveModelAdapter());
     }
+    if (!Hive.isAdapterRegistered(HiveTableConstants.propertyTypeId)) {
+      Hive.registerAdapter(PropertyHiveModelAdapter());
+    }
   }
+
   // open Boxes
   Future<void> openBoxes() async {
     await Hive.openBox<AuthHiveModel>(HiveTableConstants.authTable);
+    await Hive.openBox<PropertyHiveModel>(HiveTableConstants.propertyTable);
   }
 
   //close Boxes
@@ -42,6 +49,7 @@ class HiveService {
     await _authBox.put(model.authId, model);
     return model;
   }
+
   //login User
   Future<AuthHiveModel?> loginUser(String email, String password) async {
     final users = _authBox.values.where(
@@ -52,18 +60,21 @@ class HiveService {
     }
     return null;
   }
-   // logout
+
+  // logout
   Future<void> logoutUser() async {}
 
-    //get current user
+  //get current user
   AuthHiveModel? getCurrentUser(String authId) {
     return _authBox.get(authId);
   }
-    //is email exists
+
+  //is email exists
   bool isEmailExists(String email) {
     final users = _authBox.values.where((user) => user.email == email);
     return users.isNotEmpty;
   }
+
   // Get user by ID
   AuthHiveModel? getUserById(String authId) {
     return _authBox.get(authId);
@@ -77,6 +88,7 @@ class HiveService {
       return null;
     }
   }
+
   // Update user
   Future<bool> updateUser(AuthHiveModel user) async {
     if (_authBox.containsKey(user.authId)) {
@@ -85,8 +97,31 @@ class HiveService {
     }
     return false;
   }
+
   // Delete user
   Future<void> deleteUser(String authId) async {
     await _authBox.delete(authId);
   }
+
+  // ================================ Property Queries =================================
+
+Box<PropertyHiveModel> get _propertyBox =>
+    Hive.box<PropertyHiveModel>(HiveTableConstants.propertyTable);
+
+List<PropertyHiveModel> getAllProperty() {
+  return _propertyBox.values.toList();
 }
+
+PropertyHiveModel? getPropertyById(String propertyId) {
+  return _propertyBox.get(propertyId);
+}
+
+Future<void> cacheAllProperty(List<PropertyHiveModel> properties) async {
+  await _propertyBox.clear();
+  for (var property in properties) {
+    await _propertyBox.put(property.propertyId, property);
+  }
+}
+
+}
+

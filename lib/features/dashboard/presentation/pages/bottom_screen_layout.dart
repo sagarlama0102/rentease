@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rentease/screens/bottom_screen/bookings_screen.dart';
-import 'package:rentease/screens/bottom_screen/favorites_screen.dart';
-import 'package:rentease/screens/bottom_screen/home_screen.dart';
-import 'package:rentease/screens/bottom_screen/profile_screen.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/bookings_screen.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/favorites_screen.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/home_screen.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/profile_screen.dart';
 
 class BottomScreenLayout extends StatefulWidget {
   const BottomScreenLayout({super.key});

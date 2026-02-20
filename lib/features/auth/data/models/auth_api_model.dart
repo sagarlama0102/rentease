@@ -3,9 +3,9 @@ import 'package:rentease/features/auth/domain/entities/auth_entity.dart';
 
 part 'auth_api_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthApiModel {
-  @JsonKey(name: '_id')
+  @JsonKey(name: '_id',includeIfNull: false)
   final String? id;
   final String firstName;
   final String lastName;
@@ -14,7 +14,7 @@ class AuthApiModel {
   final String username;
   final String? password;
   final String? confirmPassword;
-  @JsonKey(includeIfNull: false)
+  
   final String? profilePicture;
 
   const AuthApiModel({
