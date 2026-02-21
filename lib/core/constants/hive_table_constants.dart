@@ -12,5 +12,6 @@ class HiveTableConstants {
   static const int propertyTypeId = 1;
   static const String propertyTable = 'property_table';
 
-  
+  static const int bookingTypeId = 2;
+  static const String bookingTable = 'booking_table';
 }
