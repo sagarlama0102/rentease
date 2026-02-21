@@ -70,18 +70,37 @@ class PropertyRepository implements IPropertyRepository {
   }
 
   @override
-  Future<Either<Failure, PropertyEntity>> getPropertyById(
-    String propertyId,
-  ) async {
+Future<Either<Failure, PropertyEntity>> getPropertyById(
+  String propertyId,
+) async {
+  // 1. Check if the user is online
+  if (await _networkInfo.isConnected) {
     try {
-      final model = await _propertyLocalDatasource.getPropertyById(propertyId);
-      if (model != null) {
-        final entity = model.toEntity();
-        return Right(entity);
+      // 2. Try to get the latest data from the Remote API
+      final apiModel = await _propertyRemoteDataSource.getPropertyById(propertyId);
+      
+      if (apiModel != null) {
+        // 3. Optional: Update the local cache so offline mode stays fresh
+        // final hiveModel = PropertyHiveModel.fromApiModel(apiModel);
+        // await _propertyLocalDatasource.cacheSingleProperty(hiveModel);
+        
+        return Right(apiModel.toEntity());
       }
-      return Left(LocalDatabaseFailure(message: "Properties not found"));
     } catch (e) {
-      return Left(LocalDatabaseFailure(message: e.toString()));
+      // If API fails (server down), fallback to Local database below
     }
   }
+
+  // 4. Fallback to Local Database (Hive) if offline or API failed
+  try {
+    final model = await _propertyLocalDatasource.getPropertyById(propertyId);
+    if (model != null) {
+      final entity = model.toEntity();
+      return Right(entity);
+    }
+    return Left(LocalDatabaseFailure(message: "Property not found in cache"));
+  } catch (e) {
+    return Left(LocalDatabaseFailure(message: e.toString()));
+  }
+}
 }

@@ -117,107 +117,112 @@ class BestOfferCard extends StatelessWidget {
   
   const BestOfferCard({super.key, required this.property});
 
-  @override
-  Widget build(BuildContext context) {
-    // Using the exact IP you confirmed is working in ProfileScreen
-    // Ensure this points to the root of your server where 'public' or 'uploads' are served
-    const String imageServerUrl = "http://192.168.101.11:4000";
+  // Inside BestOfferCard build method
+@override
+Widget build(BuildContext context) {
+  const String imageServerUrl = "http://192.168.101.11:4000";
 
-    final String imageUrl = property.propertyImages.isNotEmpty 
-        ? "$imageServerUrl${property.propertyImages[0]}" 
-        : 'https://via.placeholder.com/400';
+  final String imageUrl = property.propertyImages.isNotEmpty 
+      ? "$imageServerUrl${property.propertyImages[0]}" 
+      : 'https://via.placeholder.com/400';
 
-    final double cardWidth = MediaQuery.of(context).size.width * 0.8;
+  // REMOVE final double cardWidth = MediaQuery.of(context).size.width * 0.8;
 
-    return Container(
-      width: cardWidth,
-      margin: const EdgeInsets.only(right: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            // IMAGE SECTION
-            Image.network(
+  return Container(
+    // REMOVE width: cardWidth, (The Grid will handle the width now)
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          // IMAGE SECTION
+          Positioned.fill( // Use Positioned.fill to make the image cover the whole card area
+            child: Image.network(
               imageUrl,
-              height: 250,
-              width: cardWidth,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => 
-                Container(
-                  color: Colors.grey.shade200, 
-                  child: const Icon(Icons.broken_image, color: Colors.grey, size: 40)
-                ),
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey.shade200,
+                child: const Icon(Icons.broken_image, color: Colors.grey, size: 30),
+              ),
             ),
-            
-            // GRADIENT OVERLAY
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: const [0.5, 1.0],
-                  ),
+          ),
+          
+          // GRADIENT OVERLAY
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.85)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0.4, 1.0], // Start the dark gradient a bit higher
                 ),
               ),
             ),
+          ),
 
-            // PROPERTY DETAILS
-            Positioned(
-              bottom: 0, left: 0, right: 0,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      property.title,
-                      style: const TextStyle(
-                        color: Colors.white, 
-                        fontSize: 22, 
-                        fontWeight: FontWeight.bold
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+          // PROPERTY DETAILS
+          Positioned(
+            bottom: 0, left: 0, right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(10), // Reduced padding for smaller grid cards
+              child: Column(
+                mainAxisSize: MainAxisSize.min, // Vital: take only as much space as needed
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    property.title,
+                    style: const TextStyle(
+                      color: Colors.white, 
+                      fontSize: 16, // Smaller font for grid view
+                      fontWeight: FontWeight.bold
                     ),
-                    Text(
-                      "Rs. ${property.price}",
-                      style: const TextStyle(
-                        color: Colors.white, 
-                        fontSize: 18, 
-                        fontWeight: FontWeight.w600
-                      ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    "Rs. ${property.price}",
+                    style: const TextStyle(
+                      color: Colors.white, 
+                      fontSize: 14, 
+                      fontWeight: FontWeight.w600
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, color: Colors.white, size: 18),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            "${property.address}, ${property.city}",
-                            style: const TextStyle(color: Colors.white, fontSize: 14),
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.white, size: 14),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: Text(
+                          property.city, // Just show city to save space in grid
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  // If IconBadges are still too big, consider wrapping them in a Wrap or removing one
+                  SingleChildScrollView( 
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
                       children: [
-                        IconBadge(icon: Icons.bed, text: '${property.bhk} BHK'),
-                        const SizedBox(width: 8),
+                        IconBadge(icon: Icons.bed, text: '${property.bhk}'),
+                        const SizedBox(width: 4),
                         IconBadge(icon: Icons.home_work, text: property.propertyType),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }
