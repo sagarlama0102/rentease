@@ -28,6 +28,9 @@ class HiveService {
     if (!Hive.isAdapterRegistered(HiveTableConstants.propertyTypeId)) {
       Hive.registerAdapter(PropertyHiveModelAdapter());
     }
+    // if (!Hive.isAdapterRegistered(HiveTableConstants.bookingTypeId)) {
+    //   Hive.registerAdapter();
+    // }
   }
 
   // open Boxes
@@ -105,23 +108,21 @@ class HiveService {
 
   // ================================ Property Queries =================================
 
-Box<PropertyHiveModel> get _propertyBox =>
-    Hive.box<PropertyHiveModel>(HiveTableConstants.propertyTable);
+  Box<PropertyHiveModel> get _propertyBox =>
+      Hive.box<PropertyHiveModel>(HiveTableConstants.propertyTable);
 
-List<PropertyHiveModel> getAllProperty() {
-  return _propertyBox.values.toList();
-}
+  List<PropertyHiveModel> getAllProperty() {
+    return _propertyBox.values.toList();
+  }
 
-PropertyHiveModel? getPropertyById(String propertyId) {
-  return _propertyBox.get(propertyId);
-}
+  PropertyHiveModel? getPropertyById(String propertyId) {
+    return _propertyBox.get(propertyId);
+  }
 
-Future<void> cacheAllProperty(List<PropertyHiveModel> properties) async {
-  await _propertyBox.clear();
-  for (var property in properties) {
-    await _propertyBox.put(property.propertyId, property);
+  Future<void> cacheAllProperty(List<PropertyHiveModel> properties) async {
+    await _propertyBox.clear();
+    for (var property in properties) {
+      await _propertyBox.put(property.propertyId, property);
+    }
   }
 }
-
-}
-

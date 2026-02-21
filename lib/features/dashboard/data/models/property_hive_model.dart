@@ -2,7 +2,6 @@ import 'package:hive/hive.dart';
 import 'package:rentease/core/constants/hive_table_constants.dart';
 import 'package:rentease/features/dashboard/data/models/property_api_model.dart';
 import 'package:rentease/features/dashboard/domain/entities/property_entity.dart';
-import 'package:uuid/uuid.dart';
 
 part 'property_hive_model.g.dart';
 
