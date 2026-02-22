@@ -1,12 +1,12 @@
 import 'package:hive/hive.dart';
 import 'package:rentease/core/constants/hive_table_constants.dart';
+import 'package:rentease/features/booking/data/models/booking_api_model.dart';
 import 'package:rentease/features/booking/domain/entities/booking_entity.dart';
 
 part 'booking_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstants.bookingTypeId)
 class BookingHiveModel extends HiveObject {
-
   @HiveField(0)
   final String? bookingId;
 
@@ -46,10 +46,8 @@ class BookingHiveModel extends HiveObject {
       userId: userId,
       status: BookingEntity.statusFromString(status),
       message: message,
-      createdAt:
-          createdAt != null ? DateTime.parse(createdAt!) : null,
-      updatedAt:
-          updatedAt != null ? DateTime.parse(updatedAt!) : null,
+      createdAt: createdAt != null ? DateTime.parse(createdAt!) : null,
+      updatedAt: updatedAt != null ? DateTime.parse(updatedAt!) : null,
     );
   }
 
@@ -66,8 +64,28 @@ class BookingHiveModel extends HiveObject {
     );
   }
 
-  static List<BookingEntity> toEntityList(
-      List<BookingHiveModel> models) {
+  static List<BookingEntity> toEntityList(List<BookingHiveModel> models) {
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  //convert from API model to Hive model for caching
+  factory BookingHiveModel.fromApiModel(BookingApiModel apiModel) {
+  return BookingHiveModel(
+    bookingId: apiModel.id,
+    propertyId: apiModel.propertyId is Map ? apiModel.propertyId['_id'] : apiModel.propertyId.toString(),
+    userId: apiModel.userId is Map ? apiModel.userId['_id'] : apiModel.userId.toString(),
+    status: apiModel.status,
+    message: apiModel.message,
+    createdAt: apiModel.createdAt,
+    updatedAt: apiModel.updatedAt,
+  );
+}
+  //convert list of API models to Hive models for caching
+  static List<BookingHiveModel> fromApiModelList(
+    List<BookingApiModel> apiModels,
+  ) {
+    return apiModels
+        .map((model) => BookingHiveModel.fromApiModel(model))
+        .toList();
   }
 }
