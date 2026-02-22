@@ -10,6 +10,18 @@ import 'package:rentease/features/booking/data/models/booking_hive_model.dart';
 import 'package:rentease/features/booking/domain/entities/booking_entity.dart';
 import 'package:rentease/features/booking/domain/repositories/booking_repository.dart';
 
+final bookingRepositoryProvider = Provider<IBookingRepository>((ref) {
+  final localDatasource = ref.read(bookingLocalDatasourceProvider);
+  final remoteDatasource = ref.read(bookingRemoteDatasourceProvider);
+  final networkInfo = ref.read(networkInfoProvider);
+
+  return BookingRepository(
+    localDatasource: localDatasource,
+    remoteDatasource: remoteDatasource,
+    networkInfo: networkInfo,
+  );
+});
+
 class BookingRepository implements IBookingRepository {
   final BookingLocalDatasource _localDatasource;
   final IBookingRemoteDataSource _remoteDatasource;
@@ -19,9 +31,9 @@ class BookingRepository implements IBookingRepository {
     required BookingLocalDatasource localDatasource,
     required IBookingRemoteDataSource remoteDatasource,
     required NetworkInfo networkInfo,
-  })  : _localDatasource = localDatasource,
-        _remoteDatasource = remoteDatasource,
-        _networkInfo = networkInfo;
+  }) : _localDatasource = localDatasource,
+       _remoteDatasource = remoteDatasource,
+       _networkInfo = networkInfo;
 
   @override
   Future<Either<Failure, BookingEntity>> createBooking(
@@ -31,9 +43,9 @@ class BookingRepository implements IBookingRepository {
       try {
         final bookingApiModel = BookingApiModel.fromEntity(booking);
         final success = await _remoteDatasource.createBooking(bookingApiModel);
-        
+
         if (success) {
-          // Typically, for a successful creation, you'd want to return 
+          // Typically, for a successful creation, you'd want to return
           // the entity, but since 'success' is just a bool, we return the input.
           return Right(booking);
         } else {
@@ -57,11 +69,11 @@ class BookingRepository implements IBookingRepository {
     if (await _networkInfo.isConnected) {
       try {
         final models = await _remoteDatasource.getAllBookings(page, size);
-        
+
         // Cache the data locally
         final hiveModels = BookingHiveModel.fromApiModelList(models);
         await _localDatasource.cacheAllBookings(hiveModels);
-        
+
         return Right(BookingApiModel.toEntityList(models));
       } catch (e) {
         return _getCachedBookings();
@@ -87,14 +99,17 @@ class BookingRepository implements IBookingRepository {
     required BookingStatus status,
   }) async {
     final statusString = BookingEntity.statusToString(status);
-    
+
     if (await _networkInfo.isConnected) {
       try {
-        final success = await _remoteDatasource.updateBookingStatus(bookingId, statusString);
+        final success = await _remoteDatasource.updateBookingStatus(
+          bookingId,
+          statusString,
+        );
         if (success) {
           // Update local cache too
           await _localDatasource.updateBookingStatus(bookingId, statusString);
-          
+
           // Get the updated object from local to return as entity
           final updated = await _localDatasource.getBookingById(bookingId);
           return Right(updated!.toEntity());
@@ -104,7 +119,9 @@ class BookingRepository implements IBookingRepository {
         return Left(ApiFailure(message: e.toString()));
       }
     } else {
-       return const Left(NetworkFailure(message: 'No internet connection to update status'));
+      return const Left(
+        NetworkFailure(message: 'No internet connection to update status'),
+      );
     }
   }
 
@@ -115,19 +132,27 @@ class BookingRepository implements IBookingRepository {
   }) async {
     if (await _networkInfo.isConnected) {
       try {
-        final model = await _remoteDatasource.findActiveBooking(userId, propertyId);
+        final model = await _remoteDatasource.findActiveBooking(
+          userId,
+          propertyId,
+        );
         return Right(model?.toEntity());
       } catch (e) {
         return Left(ApiFailure(message: e.toString()));
       }
     } else {
-      final localModel = await _localDatasource.findActiveBooking(userId, propertyId);
+      final localModel = await _localDatasource.findActiveBooking(
+        userId,
+        propertyId,
+      );
       return Right(localModel?.toEntity());
     }
   }
 
   @override
-  Future<Either<Failure, BookingEntity>> getBookingById(String bookingId) async {
+  Future<Either<Failure, BookingEntity>> getBookingById(
+    String bookingId,
+  ) async {
     // Similar logic: try remote, fallback to local
     try {
       final local = await _localDatasource.getBookingById(bookingId);
