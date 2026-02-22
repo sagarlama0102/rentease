@@ -20,4 +20,12 @@ class ApiEndpoints {
 
   static const String getAllProperty = '/properties';
   static String getPropertyById(String id) => '/properties/$id';
+
+  //bookings
+  static const String createBooking = "bookings"; // app.use("/api/bookings", ...)
+  static const String getMyBookings = "bookings/my-bookings";
+  
+  // Logic for dynamic routes
+  static String cancelBooking(String id) => "bookings/$id/cancel";
+  static String getBookingById(String id) => "bookings/$id";
 }

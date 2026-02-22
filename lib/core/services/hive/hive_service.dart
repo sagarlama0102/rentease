@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rentease/core/constants/hive_table_constants.dart';
 import 'package:rentease/features/auth/data/models/auth_hive_model.dart';
+import 'package:rentease/features/booking/data/models/booking_hive_model.dart';
 import 'package:rentease/features/dashboard/data/models/property_hive_model.dart';
 
 final hiveServiceProvider = Provider<HiveService>((ref) {
@@ -28,15 +29,16 @@ class HiveService {
     if (!Hive.isAdapterRegistered(HiveTableConstants.propertyTypeId)) {
       Hive.registerAdapter(PropertyHiveModelAdapter());
     }
-    // if (!Hive.isAdapterRegistered(HiveTableConstants.bookingTypeId)) {
-    //   Hive.registerAdapter();
-    // }
+    if (!Hive.isAdapterRegistered(HiveTableConstants.bookingTypeId)) {
+      Hive.registerAdapter(BookingHiveModelAdapter());
+    }
   }
 
   // open Boxes
   Future<void> openBoxes() async {
     await Hive.openBox<AuthHiveModel>(HiveTableConstants.authTable);
     await Hive.openBox<PropertyHiveModel>(HiveTableConstants.propertyTable);
+    await Hive.openBox<BookingHiveModel>(HiveTableConstants.bookingTable);
   }
 
   //close Boxes
@@ -123,6 +125,59 @@ class HiveService {
     await _propertyBox.clear();
     for (var property in properties) {
       await _propertyBox.put(property.propertyId, property);
+    }
+  }
+
+  //====================Booking Queries==============================//
+
+  Box<BookingHiveModel> get _bookingBox =>
+      Hive.box<BookingHiveModel>(HiveTableConstants.bookingTable);
+
+  Future<BookingHiveModel> createBooking(BookingHiveModel booking) async {
+    final id = booking.bookingId ?? DateTime.now().millisecondsSinceEpoch.toString();
+  await _bookingBox.put(id, booking);
+  return booking;
+  }
+
+  List<BookingHiveModel> getAllBookings() {
+    return _bookingBox.values.toList();
+  }
+
+  BookingHiveModel? getBookingById(String bookingId) {
+    return _bookingBox.get(bookingId);
+  }
+
+  Future<bool> updateBookingStatus(BookingHiveModel booking) async {
+    final id = booking.bookingId;
+    if (id != null && _bookingBox.containsKey(id)) {
+      await _bookingBox.put(id, booking);
+      return true;
+    }
+    return false;
+  }
+
+  Future<BookingHiveModel?> findActiveBooking({
+    required String userId,
+    required String propertyId,
+  }) async {
+    try {
+      return _bookingBox.values.firstWhere(
+        (booking) =>
+            booking.userId == userId &&
+            booking.propertyId == propertyId &&
+            (booking.status == "PENDING" || booking.status == "CONFIRMED"),
+      );
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> cacheAllBooking(List<BookingHiveModel> bookings) async {
+    await _bookingBox.clear();
+    for (var booking in bookings) {
+      if (booking.bookingId != null) {
+        await _bookingBox.put(booking.bookingId, booking);
+      }
     }
   }
 }
