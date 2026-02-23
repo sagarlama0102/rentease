@@ -55,7 +55,7 @@ class BookingRemoteDatasource implements IBookingRemoteDataSource {
       );
 
       // Access the 'booking' list from the {booking: [], total: X} response
-      final List data = response.data['booking'];
+      final List data = response.data['data'];
       return data.map((json) => BookingApiModel.fromJson(json)).toList();
     } catch (e) {
       return [];

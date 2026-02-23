@@ -13,6 +13,8 @@ class BookingEntity extends Equatable {
   final String propertyId;
   final String userId;
   final BookingStatus status;
+  final String? propertyTitle; // Optional: Add this to show the house name!
+  final List<String> propertyImages;
   final String? message;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -22,6 +24,8 @@ class BookingEntity extends Equatable {
     required this.propertyId,
     required this.userId,
     this.status = BookingStatus.pending,
+    this.propertyTitle,
+    this.propertyImages = const [],
     this.message,
     this.createdAt,
     this.updatedAt,
@@ -64,7 +68,10 @@ class BookingEntity extends Equatable {
         userId,
         status,
         message,
+        propertyTitle,
+        propertyImages,
         createdAt,
         updatedAt,
+
       ];
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/bookings_screen.dart';
 import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/favorites_screen.dart';
 import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/home_screen.dart';
+import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/my_booking_screen.dart';
 import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/profile_screen.dart';
 
 class BottomScreenLayout extends StatefulWidget {
@@ -16,7 +16,7 @@ class _BottomScreenLayoutState extends State<BottomScreenLayout> {
 
   List<Widget> lstBottomScreen = [
     HomeScreen(),
-    BookingsScreen(),
+    MyBookingsScreen(),
     FavoritesScreen(),
     ProfileScreen(),
   ];
