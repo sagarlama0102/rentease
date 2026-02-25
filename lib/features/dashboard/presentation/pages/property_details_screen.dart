@@ -17,7 +17,7 @@ class PropertyDetailScreen extends ConsumerStatefulWidget {
 
 class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
   // Use a consistent server URL (Update this if your IP changes)
-  final String imageServerUrl = "http://172.26.0.73:4000";
+  final String imageServerUrl = "http://192.168.101.15:4000";
 
   @override
   void initState() {

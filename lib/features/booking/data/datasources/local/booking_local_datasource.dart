@@ -67,7 +67,7 @@ class BookingLocalDatasource implements IBookingLocalDataSource {
   Future<bool> updateBookingStatus(String bookingId, String status) async {
     try {
       // 1. Get the existing booking from Hive
-      final existingBooking = await _hiveService.getBookingById(bookingId);
+      final existingBooking = _hiveService.getBookingById(bookingId);
       
       if (existingBooking != null) {
         // 2. Create a NEW instance with the updated status 

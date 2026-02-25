@@ -11,7 +11,7 @@ class BestOfferCard extends StatelessWidget {
   // Inside BestOfferCard build method
 @override
 Widget build(BuildContext context) {
-  const String imageServerUrl = "http://172.26.0.73:4000";
+  const String imageServerUrl = "http://192.168.101.15:4000";
 
   final String imageUrl = property.propertyImages.isNotEmpty 
       ? "$imageServerUrl${property.propertyImages[0]}" 
@@ -101,7 +101,7 @@ Widget build(BuildContext context) {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        IconBadge(icon: Icons.bed, text: '${property.bhk}'),
+                        IconBadge(icon: Icons.bed, text: property.bhk),
                         const SizedBox(width: 4),
                         IconBadge(icon: Icons.home_work, text: property.propertyType),
                       ],

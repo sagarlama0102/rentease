@@ -27,7 +27,7 @@ class BookingRemoteDatasource implements IBookingRemoteDataSource {
 
   // Helper to get headers - reduces code duplication
   Future<Options> _getOptions() async {
-    final token = await _tokenService.getToken();
+    final token = _tokenService.getToken();
     return Options(headers: {'Authorization': 'Bearer $token'});
   }
 

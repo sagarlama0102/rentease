@@ -11,7 +11,7 @@ class HomeHeader extends ConsumerWidget {
     // 1. Listen to the same Auth State as the Profile Page
     final authState = ref.watch(authViewModelProvider);
     final user = authState.authEntity;
-    final String baseUrl = "http://172.26.0.73:4000";
+    final String baseUrl = "http://192.168.101.15:4000";
 
     // Fallback if name is empty
     final String userName = user?.username ?? "User";

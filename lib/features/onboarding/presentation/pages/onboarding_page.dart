@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/routes/app_routes.dart';
 import 'package:rentease/features/auth/presentation/pages/login_page.dart';
-import 'package:rentease/screens/login_screen.dart'; // Adjust path
+// Adjust path
 import '../widgets/onboarding_content.dart';
 import '../widgets/page_indicator.dart';
 

@@ -10,7 +10,7 @@ class BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Make sure this matches your backend IP/URL
-    const String imageServerUrl = "http://172.26.0.73:4000";
+    const String imageServerUrl = "http://192.168.101.15:4000";
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
