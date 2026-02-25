@@ -1,8 +1,9 @@
 import 'package:hive/hive.dart';
 import 'package:rentease/core/constants/hive_table_constants.dart';
+import 'package:rentease/features/favourites/data/models/favourite_api_model.dart';
 import 'package:rentease/features/favourites/domain/entities/favourite_entity.dart';
 
-part 'favourite_hive_model.g.dart'; 
+part 'favourite_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstants.favouriteTypeId)
 class FavouriteHiveModel extends HiveObject {
@@ -41,5 +42,28 @@ class FavouriteHiveModel extends HiveObject {
 
   static List<FavouriteEntity> toEntityList(List<FavouriteHiveModel> models) {
     return models.map((model) => model.toEntity()).toList();
+  }
+
+  //converty from API model to hive model for caching
+  factory FavouriteHiveModel.fromApiModel(FavouriteApiModel apiModel) {
+    return FavouriteHiveModel(
+      favouriteId: apiModel.id,
+      propertyId: apiModel.propertyId is Map
+          ? apiModel.propertyId['_id']
+          : apiModel.propertyId.toString(),
+      userId: apiModel.userId is Map
+          ? apiModel.userId['_id']
+          : apiModel.userId.toString(),
+      propertyImages: apiModel.propertyImages,
+      propertyTitle: apiModel.propertyTitle,
+    );
+  }
+  //convert list of API models to Hive models for caching
+  static List<FavouriteHiveModel> fromApiModelList(
+    List<FavouriteApiModel> apiModels,
+  ) {
+    return apiModels
+        .map((model) => FavouriteHiveModel.fromApiModel(model))
+        .toList();
   }
 }

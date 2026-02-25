@@ -28,4 +28,11 @@ class ApiEndpoints {
   // Logic for dynamic routes
   static String cancelBooking(String id) => "bookings/$id/cancel";
   static String getBookingById(String id) => "bookings/$id";
+
+  //favourites
+  static const String toggleFavourite = "favourites/toggle";
+  static const String getMyFavourites = "favourites/my-wishlist";
+  
+  // Logic for dynamic status check
+  static String checkFavouriteStatus(String propertyId) => "favourites/status/$propertyId";
 }
