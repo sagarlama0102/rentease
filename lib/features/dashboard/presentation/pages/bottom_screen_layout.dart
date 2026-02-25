@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentease/app/theme/theme_extensions.dart';
 import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/favorites_screen.dart';
 import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/home_screen.dart';
 import 'package:rentease/features/dashboard/presentation/pages/bottom_screen/my_booking_screen.dart';
@@ -14,56 +15,90 @@ class BottomScreenLayout extends StatefulWidget {
 class _BottomScreenLayoutState extends State<BottomScreenLayout> {
   int _selectedIndex = 0;
 
-  List<Widget> lstBottomScreen = [
+  final List<Widget> lstBottomScreen = const [
     HomeScreen(),
     MyBookingsScreen(),
     FavouritesScreen(),
     ProfileScreen(),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Keep background color consistent with the theme
+      backgroundColor: context.backgroundColor,
       
-      body: lstBottomScreen[_selectedIndex],
+      // Use IndexedStack to preserve state when switching tabs
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: lstBottomScreen,
+      ),
+
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          color: context.surfaceColor,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black26,
-              blurRadius: 10,
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 20,
+              offset: const Offset(0, -4),
             ),
-            
           ],
         ),
-        
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(22),
-            topRight: Radius.circular(22),
-          ),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_month),
-                label: "Bookings",
-              ),
-              BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "favorites"),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "Profile",
-              ),
-            ],
-            backgroundColor: Color(0xff142725),
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Color(0xff99DAB3),
-            currentIndex: _selectedIndex,
-            onTap: (index) {
-              setState(() {
-                _selectedIndex = index;
-              });
-            },
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _selectedIndex,
+              onTap: (index) => setState(() => _selectedIndex = index),
+              
+              // MODERN STYLING
+              backgroundColor: Colors.transparent, // Controlled by the Container
+              elevation: 0,
+              selectedItemColor: const Color(0xff99DAB3), // Your signature mint green
+              unselectedItemColor: context.textSecondary.withOpacity(0.5),
+              selectedFontSize: 12,
+              unselectedFontSize: 12,
+              selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+              showUnselectedLabels: true,
+
+              items: const [
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Icon(Icons.home_outlined),
+                  ),
+                  activeIcon: Icon(Icons.home_rounded),
+                  label: "Home",
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Icon(Icons.calendar_today_outlined),
+                  ),
+                  activeIcon: Icon(Icons.calendar_today_rounded),
+                  label: "Bookings",
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Icon(Icons.favorite_outline_rounded),
+                  ),
+                  activeIcon: Icon(Icons.favorite_rounded),
+                  label: "Wishlist",
+                ),
+                BottomNavigationBarItem(
+                  icon: Padding(
+                    padding: EdgeInsets.only(bottom: 4),
+                    child: Icon(Icons.person_outline_rounded),
+                  ),
+                  activeIcon: Icon(Icons.person_rounded),
+                  label: "Profile",
+                ),
+              ],
+            ),
           ),
         ),
       ),

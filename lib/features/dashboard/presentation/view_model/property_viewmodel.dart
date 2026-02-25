@@ -11,7 +11,6 @@ class PropertyViewmodel extends Notifier<PropertyState> {
   late final GetAllPropertyUsecase _getAllPropertyUsecase;
   late final GetPropertyByidUsecase _getPropertyByidUsecase;
 
-  // A local list to hold all properties for searching without refetching from API
   List<PropertyEntity> _allPropertiesBackup = [];
 
   @override
@@ -50,7 +49,7 @@ class PropertyViewmodel extends Notifier<PropertyState> {
 
   void searchProperties(String query) {
     if (query.isEmpty) {
-      // If search is empty, restore the full list from backup
+
       state = state.copyWith(properties: _allPropertiesBackup);
       return;
     }

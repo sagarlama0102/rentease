@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:rentease/features/booking/domain/entities/booking_entity.dart';
 
-// mirrors your teacher's state flow
+
 enum BookingStatusState { initial, loading, loaded, error, created, updated, deleted }
 
 class BookingState extends Equatable {
   final BookingStatusState status;
-  final List<BookingEntity> bookings; // All bookings for the user
-  final BookingEntity? activeBooking; // Result of findActiveBooking check
+  final List<BookingEntity> bookings; 
+  final BookingEntity? activeBooking; 
   final String? errorMessage;
 
   const BookingState({
@@ -17,7 +17,7 @@ class BookingState extends Equatable {
     this.errorMessage,
   });
 
-  // copyWith allows us to update only specific parts of the state
+
   BookingState copyWith({
     BookingStatusState? status,
     List<BookingEntity>? bookings,

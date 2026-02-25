@@ -1,10 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:rentease/app/routes/app_routes.dart';
-import 'package:rentease/app/theme/app_colors.dart';
-import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:rentease/app/routes/app_routes.dart';
+import 'package:rentease/app/theme/app_colors.dart';
 import 'package:rentease/app/theme/theme_extensions.dart';
 import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/core/utils/snackbar_utils.dart';
@@ -22,15 +22,11 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final List<XFile> _selectedMedia = [];
   final ImagePicker _imagePicker = ImagePicker();
-  // final String _baseUrl = "http://192.168.101.15:4000";
-  String? _selectedMediaType;
-  String? _profilePictureUrl;
 
+  // --- Permission & Logic Helpers ---
   Future<bool> _requestPermission(Permission permission) async {
     final status = await permission.status;
-    if (status.isGranted) {
-      return true;
-    }
+    if (status.isGranted) return true;
     if (status.isDenied) {
       final result = await permission.request();
       return result.isGranted;
@@ -47,135 +43,52 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text("Permission Required"),
-        content: const Text(
-          "This feature requires permission to access your camera or gallery. Please enable it in your device settings.",
-        ),
+        content: const Text("Please enable access in settings to update your profile photo."),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              openAppSettings();
-            },
-            child: const Text('Open Settings'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(onPressed: () => openAppSettings(), child: const Text('Settings')),
         ],
       ),
     );
   }
 
-  // code for camera
+  Future<void> _handleImageSelection(XFile? file) async {
+    if (file != null) {
+      setState(() {
+        _selectedMedia.clear();
+        _selectedMedia.add(file);
+      });
+      await ref.read(authViewModelProvider.notifier).uploadPhoto(File(file.path));
+    }
+  }
+
   Future<void> _pickFromCamera() async {
-    final hasPermission = await _requestPermission(Permission.camera);
-    debugPrint("Camera Permission Status: $hasPermission");
-    if (!hasPermission) return;
-
-    try {
-      final XFile? photo = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 80,
-      );
-
-      if (photo != null) {
-        setState(() {
-          _selectedMedia.clear();
-          _selectedMedia.add(photo);
-          _selectedMediaType = 'photo';
-        });
-        // Upload photo to server
-        await ref
-            .read(authViewModelProvider.notifier)
-            .uploadPhoto(File(photo.path));
-      }
-    } catch (e) {
-      debugPrint("Camera Error: $e");
+    if (await _requestPermission(Permission.camera)) {
+      final photo = await _imagePicker.pickImage(source: ImageSource.camera, imageQuality: 80);
+      _handleImageSelection(photo);
     }
   }
 
-  // code for gallery
-  Future<void> _pickFromGallery({bool allowMultiple = false}) async {
-    try {
-      if (allowMultiple) {
-        final List<XFile> images = await _imagePicker.pickMultiImage(
-          imageQuality: 80,
-        );
-
-        if (images.isNotEmpty) {
-          setState(() {
-            _selectedMedia.clear();
-            _selectedMedia.addAll(images);
-            _selectedMediaType = 'photo';
-          });
-          // Upload first photo to server
-          await ref
-              .read(authViewModelProvider.notifier)
-              .uploadPhoto(File(images.first.path));
-        }
-      } else {
-        final XFile? image = await _imagePicker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 80,
-        );
-
-        if (image != null) {
-          setState(() {
-            _selectedMedia.clear();
-            _selectedMedia.add(image);
-            _selectedMediaType = 'photo';
-          });
-          // Upload photo to server
-          await ref
-              .read(authViewModelProvider.notifier)
-              .uploadPhoto(File(image.path));
-        }
-      }
-    } catch (e) {
-      debugPrint('Gallery Error $e');
-
-      if (mounted) {
-        SnackbarUtils.showError(
-          context,
-          'Unable to access gallery. Please try using the camera instead.',
-        );
-      }
-    }
+  Future<void> _pickFromGallery() async {
+    final image = await _imagePicker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+    _handleImageSelection(image);
   }
 
-  // code for dialogBox : showDialog for menu
-  Future<void> _pickMedia() async {
+  void _pickMedia() {
     showModalBottomSheet(
       context: context,
       backgroundColor: context.surfaceColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (context) => SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: Icon(Icons.camera),
-                title: Text('Open Camera'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickFromCamera();
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.browse_gallery),
-                title: Text('Open Gallery'),
-                onTap: () {
-                  Navigator.pop(context);
-                  _pickFromGallery();
-                },
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 8),
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10))),
+            ListTile(leading: const Icon(Icons.camera_alt_outlined), title: const Text('Take a Photo'), onTap: () { Navigator.pop(context); _pickFromCamera(); }),
+            ListTile(leading: const Icon(Icons.image_outlined), title: const Text('Choose from Gallery'), onTap: () { Navigator.pop(context); _pickFromGallery(); }),
+            const SizedBox(height: 10),
+          ],
         ),
       ),
     );
@@ -184,168 +97,162 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authViewModelProvider);
+    
     ref.listen<AuthState>(authViewModelProvider, (previous, next) {
       if (next.status == AuthStatus.created) {
-        SnackbarUtils.showSuccess(context, "Profile picture updated");
-        Navigator.pop(context);
+        SnackbarUtils.showSuccess(context, "Profile updated successfully");
       } else if (next.status == AuthStatus.error && next.errorMessage != null) {
         SnackbarUtils.showError(context, next.errorMessage!);
       }
     });
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              // HEADER
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.only(bottom: 32),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColors.authPrimary, AppColors.authPrimary],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+      backgroundColor: context.backgroundColor,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // --- HEADER SECTION ---
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.center,
+              children: [
+                // Curved Primary Background
+                Container(
+                  height: 220,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppColors.authPrimary, // Stays green/primary in both modes
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(40),
+                      bottomRight: Radius.circular(40),
+                    ),
                   ),
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(32),
-                    bottomRight: Radius.circular(32),
-                  ),
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(height: 20),
-                    Text(
-                      "My Profile",
+                  child: Center(
+                    child: Text(
+                      "Profile Settings",
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white.withOpacity(0.9),
+                        letterSpacing: 1.1,
                       ),
                     ),
-                    SizedBox(height: 22),
-
-                    GestureDetector(
-                      onTap: _pickMedia,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 4),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.black26,
-                                  blurRadius: 20,
-                                  offset: Offset(0, 10),
-                                ),
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              radius: 60,
-                              backgroundColor: Colors.white,
-                              // Check priority: 1. Local selection 2. Server URL 3. Initial letter
-                              backgroundImage: _selectedMedia.isNotEmpty
-                                  ? FileImage(File(_selectedMedia.first.path))
-                                  : (authState.authEntity?.profilePicture !=
-                                                null // Adjust 'image' based on your user entity
-                                            ? NetworkImage(
-                                                '${ApiEndpoints.baseUrlOnly}${authState.authEntity!.profilePicture!}',
-                                              )
-                                            : null)
-                                        as ImageProvider?,
-                              child:
-                                  (_selectedMedia.isEmpty &&
-                                      authState.authEntity?.profilePicture ==
-                                          null)
-                                  ? Icon(Icons.person)
-                                  : (authState.status ==
-                                        AuthStatus
-                                            .loading) // Show loader while uploading
-                                  ? const CircularProgressIndicator()
-                                  : null,
-                            ),
-                          ),
-                          // The "+" Add Button overlay
-                          Positioned(
-                            bottom: 0,
-                            right: 4,
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                  ),
-                                ],
-                              ),
-                              child: const Icon(
-                                Icons
-                                    .add_a_photo, // Changed to photo icon for better UX
-                                size: 20,
-                                color: Color(0xff6A5AE0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(height: 16),
-                    Text(
-                      authState.authEntity?.username ??
-                          "John Doe", // Bind to real name
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      authState.authEntity?.email ??
-                          "john.doe@email.com", // Bind to real email
-                      style: const TextStyle(color: Colors.white70),
-                    ),
-                    SizedBox(height: 24),
-                  ],
+                  ),
                 ),
-              ),
-
-              const SizedBox(height: 24),
-
-              // MENU
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children:  [
-                    _MenuItem(
-                      icon: Icons.person_outline,
-                      title: "Edit Profile",
-                      isDestructive: false,
-                      onTap: () {},
-                    ),
-                    SizedBox(height: 12),
-
-                    _MenuItem(
-                      icon: Icons.logout,
-                      title: "Logout",
-                      isDestructive: true,
-                      onTap: () {
-                        _showLogoutDialog(context);
-                      },
-                    ),
-                  ],
+                // Avatar Positioned over the edge
+                Positioned(
+                  top: 140,
+                  child: _buildModernAvatar(authState),
                 ),
-              ),
+              ],
+            ),
 
-              const SizedBox(height: 32),
-            ],
-          ),
+            const SizedBox(height: 70), // Gap for the overlapping avatar
+
+            // --- USER INFO ---
+            Text(
+              authState.authEntity?.username ?? "User Name",
+              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: context.textPrimary),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              authState.authEntity?.email ?? "email@example.com",
+              style: TextStyle(fontSize: 14, color: context.textSecondary, letterSpacing: 0.5),
+            ),
+
+            const SizedBox(height: 40),
+
+            // --- MENU SECTION ---
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Account",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: context.textSecondary.withOpacity(0.6),
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _ModernMenuItem(
+                    icon: Icons.person_outline_rounded,
+                    title: "Edit Profile",
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 12),
+                  _ModernMenuItem(
+                    icon: Icons.notifications_none_rounded,
+                    title: "Notifications",
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 12),
+                  _ModernMenuItem(
+                    icon: Icons.security_rounded,
+                    title: "Security",
+                    onTap: () {},
+                  ),
+                  const SizedBox(height: 24),
+                  _ModernMenuItem(
+                    icon: Icons.logout_rounded,
+                    title: "Logout",
+                    isDestructive: true,
+                    onTap: () => _showLogoutDialog(context),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 40),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModernAvatar(AuthState authState) {
+    return GestureDetector(
+      onTap: _pickMedia,
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: context.backgroundColor,
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 20, offset: const Offset(0, 10)),
+          ],
+        ),
+        child: Stack(
+          children: [
+            CircleAvatar(
+              radius: 65,
+              backgroundColor: context.surfaceColor,
+              backgroundImage: _selectedMedia.isNotEmpty
+                  ? FileImage(File(_selectedMedia.first.path))
+                  : (authState.authEntity?.profilePicture != null
+                      ? NetworkImage('${ApiEndpoints.baseUrlOnly}${authState.authEntity!.profilePicture!}')
+                      : null) as ImageProvider?,
+              child: (authState.authEntity?.profilePicture == null && _selectedMedia.isEmpty)
+                  ? Icon(Icons.person_rounded, size: 50, color: context.textSecondary)
+                  : (authState.status == AuthStatus.loading ? const CircularProgressIndicator() : null),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 38,
+                width: 38,
+                decoration: BoxDecoration(
+                  color: AppColors.authPrimary,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: context.backgroundColor, width: 3),
+                ),
+                child: const Icon(Icons.edit_rounded, color: Colors.white, size: 18),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -354,34 +261,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
+      builder: (dContext) => AlertDialog(
+        backgroundColor: context.surfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
-        content: Text('Are you sure you want to logout?'),
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to end your session?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: context.textSecondary),
-            ),
-          ),
-          TextButton(
+          TextButton(onPressed: () => Navigator.pop(dContext), child: Text('Cancel', style: TextStyle(color: context.textSecondary))),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
             onPressed: () async {
-              Navigator.pop(dialogContext);
-              // Clear user session
+              Navigator.pop(dContext);
               await ref.read(authViewModelProvider.notifier).logout();
-              if (context.mounted) {
-                AppRoutes.pushAndRemoveUntil(context, const LoginPage());
-              }
+              if (mounted) AppRoutes.pushAndRemoveUntil(context, const LoginPage());
             },
-            child: Text(
-              'Logout',
-              style: TextStyle(
-                color: AppColors.error,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: const Text('Logout', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -389,13 +283,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   }
 }
 
-class _MenuItem extends StatelessWidget {
+class _ModernMenuItem extends StatelessWidget {
   final IconData icon;
   final String title;
   final bool isDestructive;
   final VoidCallback onTap;
 
-  const _MenuItem({
+  const _ModernMenuItem({
     required this.icon,
     required this.title,
     required this.onTap,
@@ -404,38 +298,45 @@ class _MenuItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isDestructive ? Colors.red : AppColors.authPrimary;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: color),
+    final color = isDestructive ? Colors.redAccent : context.textPrimary;
+    
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: context.surfaceColor,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: context.borderColor.withOpacity(0.05)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.03),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: isDestructive ? Colors.red : Colors.black87,
-          ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: isDestructive ? Colors.red.withOpacity(0.1) : AppColors.authPrimary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: isDestructive ? Colors.redAccent : AppColors.authPrimary, size: 22),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: color),
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded, color: context.textSecondary.withOpacity(0.4)),
+          ],
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
       ),
     );
   }

@@ -82,7 +82,7 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
   Future<String> uploadPhoto(File photo) async {
     final fileName = photo.path.split('/').last;
     final formData = FormData.fromMap({
-      // 'profilePhoto': await MultipartFile.fromFile(
+      
       'image': await MultipartFile.fromFile(
         photo.path,
         filename: fileName,
@@ -93,7 +93,6 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
     final response = await _apiClient.uploadFile(
       ApiEndpoints.userUploadPhoto,
       formData: formData,
-      // options: Options(headers: {'Authorization': 'Bearer $token'}),
       options: Options(
         method: 'PUT',
         headers: {'Authorization': 'Bearer $token'},
@@ -101,8 +100,6 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
 
     );
     return response.data['data']['profilePicture'];
-    // Extract the profile picture URL from the response data
-    // final data = response.data['data'] as Map<String, dynamic>;
-    // return data['profilePicture'] as String;
+   
   }
 }

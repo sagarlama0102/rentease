@@ -18,8 +18,7 @@ class PropertyRemoteDatasource implements IPropertyRemoteDataSource {
   Future<List<PropertyApiModel>> getAllProperty() async {
     try {
       final response = await _apiClient.get(ApiEndpoints.getAllProperty);
-      
-      // Based on your backend: { "property": [...], "total": 10 }
+
       final List<dynamic> data = response.data['data']; 
       
       return data.map((json) => PropertyApiModel.fromJson(json)).toList();
@@ -35,9 +34,6 @@ class PropertyRemoteDatasource implements IPropertyRemoteDataSource {
         ApiEndpoints.getPropertyById(propertyId),
       );
       
-      // Since it's a single property, we don't map a list.
-      // If backend returns { "property": { ... } }, use response.data['property']
-      // If backend returns the object directly, use response.data
       return PropertyApiModel.fromJson(response.data['data']);
     } catch (e) {
       return null;

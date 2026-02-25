@@ -38,7 +38,7 @@ class BookingHiveModel extends HiveObject {
     this.updatedAt,
   });
 
-  /// 🔹 Convert Hive → Entity
+  
   BookingEntity toEntity() {
     return BookingEntity(
       bookingId: bookingId,
@@ -51,7 +51,6 @@ class BookingHiveModel extends HiveObject {
     );
   }
 
-  /// 🔹 Convert Entity → Hive
   factory BookingHiveModel.fromEntity(BookingEntity entity) {
     return BookingHiveModel(
       bookingId: entity.bookingId,

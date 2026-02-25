@@ -41,16 +41,16 @@ class PropertyRepository implements IPropertyRepository {
     if (await _networkInfo.isConnected) {
       try {
         final apiModels = await _propertyRemoteDataSource.getAllProperty();
-        // Cache the data locally for offline access
+
         final hiveModels = PropertyHiveModel.fromApiModelList(apiModels);
         await _propertyLocalDatasource.cacheAllProperty(hiveModels);
         final result = PropertyApiModel.toEntityList(apiModels);
         return Right(result);
       } on DioException {
-        // API failed, try to return cached data
+
         return _getCachedProperties();
       } catch (e) {
-        // API failed, try to return cached data
+
         return _getCachedProperties();
       }
     } else {
@@ -58,7 +58,7 @@ class PropertyRepository implements IPropertyRepository {
     }
   }
 
-  /// Helper method to get cached properties
+
   Future<Either<Failure, List<PropertyEntity>>> _getCachedProperties() async {
     try {
       final models = await _propertyLocalDatasource.getAllProperty();
@@ -80,10 +80,6 @@ Future<Either<Failure, PropertyEntity>> getPropertyById(
       final apiModel = await _propertyRemoteDataSource.getPropertyById(propertyId);
       
       if (apiModel != null) {
-        // 3. Optional: Update the local cache so offline mode stays fresh
-        // final hiveModel = PropertyHiveModel.fromApiModel(apiModel);
-        // await _propertyLocalDatasource.cacheSingleProperty(hiveModel);
-        
         return Right(apiModel.toEntity());
       }
     } catch (e) {
@@ -91,7 +87,7 @@ Future<Either<Failure, PropertyEntity>> getPropertyById(
     }
   }
 
-  // 4. Fallback to Local Database (Hive) if offline or API failed
+
   try {
     final model = await _propertyLocalDatasource.getPropertyById(propertyId);
     if (model != null) {

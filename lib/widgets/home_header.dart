@@ -3,45 +3,43 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/theme/app_colors.dart';
 import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/features/auth/presentation/view_model/auth_view_model.dart';
-
+import 'package:rentease/app/theme/theme_extensions.dart';
 class HomeHeader extends ConsumerWidget {
   const HomeHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. Listen to the same Auth State as the Profile Page
+
     final authState = ref.watch(authViewModelProvider);
     final user = authState.authEntity;
-    // final String baseUrl = "http://192.168.101.15:4000";
 
-    // Fallback if name is empty
     final String userName = user?.username ?? "User";
     final String userInitial = userName.isNotEmpty ? userName[0].toUpperCase() : "U";
 
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.center, // Aligned for better look
+      crossAxisAlignment: CrossAxisAlignment.center, 
       children: [
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+               Text(
                 "Welcome back,",
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: context.textSecondary,),
               ),
               const SizedBox(height: 4),
               Text(
                 userName,
-                style: const TextStyle(
-                  fontSize: 22, // Increased size for name
+                style:  TextStyle(
+                  fontSize: 22, 
                   fontWeight: FontWeight.bold,
-                  color: AppColors.darkTextSecondary,
+                  color: context.textPrimary,
                 ),
               ),
             ],
           ),
         ),
-        // 2. Dynamic Profile Picture / Initial
+
         Container(
           decoration: BoxDecoration(
             shape: BoxShape.circle,
@@ -63,7 +61,7 @@ class HomeHeader extends ConsumerWidget {
             child: user?.profilePicture == null
                 ? Text(
                     userInitial,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: AppColors.authPrimary,

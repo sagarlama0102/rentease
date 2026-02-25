@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/routes/app_routes.dart';
 import 'package:rentease/features/auth/presentation/pages/login_page.dart';
-// Adjust path
+
 import '../widgets/onboarding_content.dart';
 import '../widgets/page_indicator.dart';
 
-// Your Data Model (can be in this file or a separate one)
 class OnboardingPageData {
   final String title;
   final String imagePath;

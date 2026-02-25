@@ -9,19 +9,19 @@ class BestOfferCard extends StatelessWidget {
   
   const BestOfferCard({super.key, required this.property});
 
-  // Inside BestOfferCard build method
+  
 @override
 Widget build(BuildContext context) {
-  // const String imageServerUrl = "http://192.168.101.15:4000";
+
 
   final String imageUrl = property.propertyImages.isNotEmpty 
       ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}" 
       : 'https://via.placeholder.com/400';
 
-  // REMOVE final double cardWidth = MediaQuery.of(context).size.width * 0.8;
+ 
 
   return Container(
-    // REMOVE width: cardWidth, (The Grid will handle the width now)
+    
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(20),
     ),
@@ -30,7 +30,7 @@ Widget build(BuildContext context) {
       child: Stack(
         children: [
           // IMAGE SECTION
-          Positioned.fill( // Use Positioned.fill to make the image cover the whole card area
+          Positioned.fill( 
             child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
@@ -49,7 +49,7 @@ Widget build(BuildContext context) {
                   colors: [Colors.transparent, Colors.black.withOpacity(0.85)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  stops: const [0.4, 1.0], // Start the dark gradient a bit higher
+                  stops: const [0.4, 1.0],
                 ),
               ),
             ),
@@ -59,16 +59,16 @@ Widget build(BuildContext context) {
           Positioned(
             bottom: 0, left: 0, right: 0,
             child: Padding(
-              padding: const EdgeInsets.all(10), // Reduced padding for smaller grid cards
+              padding: const EdgeInsets.all(10), 
               child: Column(
-                mainAxisSize: MainAxisSize.min, // Vital: take only as much space as needed
+                mainAxisSize: MainAxisSize.min, 
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     property.title,
                     style: const TextStyle(
                       color: Colors.white, 
-                      fontSize: 16, // Smaller font for grid view
+                      fontSize: 16, 
                       fontWeight: FontWeight.bold
                     ),
                     maxLines: 1,
@@ -89,7 +89,7 @@ Widget build(BuildContext context) {
                       const SizedBox(width: 2),
                       Expanded(
                         child: Text(
-                          property.city, // Just show city to save space in grid
+                          property.city, 
                           style: const TextStyle(color: Colors.white, fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -97,7 +97,7 @@ Widget build(BuildContext context) {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  // If IconBadges are still too big, consider wrapping them in a Wrap or removing one
+                  
                   SingleChildScrollView( 
                     scrollDirection: Axis.horizontal,
                     child: Row(

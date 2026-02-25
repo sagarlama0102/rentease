@@ -45,9 +45,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     AppRoutes.push(context, const SignupPage());
   }
 
-  void _handleForgotPassword() {
-    SnackbarUtils.showInfo(context, 'Forgot password feature coming soon');
-  }
+  // void _handleForgotPassword() {
+  //   SnackbarUtils.showInfo(context, 'Forgot password feature coming soon');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -178,20 +178,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                   const SizedBox(height: 8),
                   // Forgot Password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: _handleForgotPassword,
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          color: AppColors.white90,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: TextButton(
+                  //     onPressed: _handleForgotPassword,
+                  //     child: Text(
+                  //       'Forgot Password?',
+                  //       style: TextStyle(
+                  //         color: AppColors.white90,
+                  //         fontWeight: FontWeight.w600,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 24),
         
                   // Login Button
                   SizedBox(

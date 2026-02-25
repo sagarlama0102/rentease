@@ -14,7 +14,7 @@ class FavouriteApiModel {
   @JsonKey(name: 'user')
   final dynamic userId;
 
-  // These are handled manually from the populated property data
+
   @JsonKey(includeFromJson: false, includeToJson: false)
   final List<String> propertyImages;
 
@@ -30,14 +30,14 @@ class FavouriteApiModel {
   });
 
 factory FavouriteApiModel.fromJson(Map<String, dynamic> json) {
-  print("RAW JSON DATA: $json");
+
   try {
-    // 1. Extract property map safely
+
     final propertyData = json['property'] is Map<String, dynamic>
         ? json['property'] as Map<String, dynamic>
         : null;
 
-    // 2. Extract images safely - using a very manual loop to prevent Type errors
+
     List<String> images = [];
     if (propertyData != null && propertyData['propertyImages'] is List) {
       for (var item in propertyData['propertyImages']) {

@@ -34,34 +34,6 @@ class AuthApiModel {
 
   Map<String, dynamic> toJson() => _$AuthApiModelToJson(this);
 
-  // //toJson
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     "firstName": firstName,
-  //     "lastName": lastName,
-  //     "email": email,
-  //     "phoneNumber": phoneNumber,
-  //     "username": username,
-  //     "password": password,
-  //     "confirmPassword": confirmPassword,
-  //     "profilePicture": profilePicture,
-  //   };
-  // }
-
-  // //fromJson
-  // factory AuthApiModel.fromJson(Map<String, dynamic> json) {
-  //   return AuthApiModel(
-  //     id: json['_id'] as String?,
-  //     firstName: json['firstName'] as String,
-  //     lastName: json['lastName'] as String,
-  //     email: json['email'] as String,
-  //     username: json['username'] as String,
-  //     phoneNumber: json['phoneNumber'] as String,
-  //     profilePicture: json['profilePicture'] as String?,
-  //     password: json['password'] as String?,
-  //   );
-  // }
-
   //toEntity
   AuthEntity toEntity() {
     return AuthEntity(

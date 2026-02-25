@@ -28,7 +28,7 @@ class BookingViewModel extends Notifier<BookingState> {
     return const BookingState();
   }
 
-  // 1. Get All Bookings (My Bookings)
+
   Future<void> getAllBookings({int page = 1, int size = 10}) async {
     state = state.copyWith(status: BookingStatusState.loading);
 
@@ -48,7 +48,7 @@ class BookingViewModel extends Notifier<BookingState> {
     );
   }
 
-  // 2. Create a New Booking
+
   Future<void> createBooking({
     required String propertyId,
     required String userId,
@@ -71,13 +71,12 @@ class BookingViewModel extends Notifier<BookingState> {
       ),
       (booking) {
         state = state.copyWith(status: BookingStatusState.created);
-        // Refresh the list after creating a new one
         getAllBookings();
       },
     );
   }
 
-  // 3. Cancel/Update Booking Status
+
   Future<void> updateBookingStatus({
     required String bookingId,
     required BookingStatus status,
@@ -95,13 +94,13 @@ class BookingViewModel extends Notifier<BookingState> {
       ),
       (updatedBooking) {
         state = state.copyWith(status: BookingStatusState.updated);
-        // Refresh list to show updated status (e.g., Cancelled)
+
         getAllBookings();
       },
     );
   }
 
-  // 4. Find if User has an active booking for this property
+
   Future<void> findActiveBooking({
     required String userId,
     required String propertyId,
@@ -119,12 +118,12 @@ class BookingViewModel extends Notifier<BookingState> {
       ),
       (booking) => state = state.copyWith(
         status: BookingStatusState.loaded,
-        activeBooking: booking, // Store the result (null or entity)
+        activeBooking: booking, 
       ),
     );
   }
 
-  // 5. Get Single Booking by ID
+
   Future<void> getBookingById(String bookingId) async {
     state = state.copyWith(status: BookingStatusState.loading);
 
@@ -137,12 +136,12 @@ class BookingViewModel extends Notifier<BookingState> {
       ),
       (booking) => state = state.copyWith(
         status: BookingStatusState.loaded,
-        // You could add a 'selectedBooking' field to state if needed
+        
       ),
     );
   }
 
-  // Helper Methods (Same as teacher's logic)
+
   void clearError() {
     state = state.copyWith(resetErrorMessage: true);
   }

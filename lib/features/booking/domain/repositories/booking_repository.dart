@@ -14,7 +14,7 @@ abstract interface class IBookingRepository {
     String bookingId,
   );
 
-  /// Get all bookings (with pagination + filter)
+  
   Future<Either<Failure, List<BookingEntity>>> getAllBookings({
     required int page,
     required int size,
@@ -22,13 +22,13 @@ abstract interface class IBookingRepository {
     String? userId,
   });
 
-  /// Update booking status (Admin action)
+  
   Future<Either<Failure, BookingEntity>> updateBookingStatus({
     required String bookingId,
     required BookingStatus status,
   });
 
-  /// Check if user has active booking (PENDING or CONFIRMED)
+  
   Future<Either<Failure, BookingEntity?>> findActiveBooking({
     required String userId,
     required String propertyId,

@@ -38,7 +38,6 @@ class FavouriteRemoteDatasource implements IFavouriteRemoteDataSource {
         options: await _getOptions(),
       );
 
-      // Based on your backend: { favorites: [...], total: 10 }
       final List data = response.data['data'];
 
       return data.map((json) => FavouriteApiModel.fromJson(json)).toList();
@@ -55,10 +54,9 @@ class FavouriteRemoteDatasource implements IFavouriteRemoteDataSource {
         options: await _getOptions(),
       );
 
-      // Matches your backend controller: returns { isFavorited: true/false }
       return response.data['isFavorited'] ?? false;
     } catch (e) {
-      return false; // Default to false if check fails
+      return false;
     }
   }
   
@@ -67,11 +65,11 @@ class FavouriteRemoteDatasource implements IFavouriteRemoteDataSource {
     try {
       final response = await _apiClient.post(
         ApiEndpoints.toggleFavourite,
-        data: {'propertyId': propertyId}, // Sending propertyId in request body
+        data: {'propertyId': propertyId}, 
         options: await _getOptions(),
       );
 
-      // Matches backend: returns { favorited: true/false }
+ 
       return response.data['favorited'] ?? false;
     } catch (e) {
       throw Exception("Remote Toggle Failed: $e");

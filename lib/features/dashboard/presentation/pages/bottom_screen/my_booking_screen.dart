@@ -16,7 +16,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch bookings when the screen opens
+
     Future.microtask(() =>
         ref.read(bookingViewModelProvider.notifier).getAllBookings());
   }

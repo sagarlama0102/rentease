@@ -41,13 +41,13 @@ class FavouriteRepository implements IFavouriteRepository {
         final models = await _remoteDataSource.getAllFavourites();
         final hiveModels = FavouriteHiveModel.fromApiModelList(models);
         
-        // Cache the new data
+       
         await _localDatasource.cacheAllFavourites(hiveModels);
         
-        // Return the fresh data
+
         return Right(FavouriteHiveModel.toEntityList(hiveModels));
       } catch (e) {
-        // Fallback to local if API fails despite being connected
+
         return _getCachedFavourites();
       }
     } else {
@@ -58,7 +58,7 @@ class FavouriteRepository implements IFavouriteRepository {
   @override
   Future<Either<Failure, bool>> isFavourite(String propertyId) async {
     try {
-      // We prioritize local check for instant UI response (Heart color)
+
       final status = await _localDatasource.isFavourite(propertyId);
       return Right(status);
     } catch (e) {
@@ -70,12 +70,9 @@ class FavouriteRepository implements IFavouriteRepository {
   Future<Either<Failure, bool>> toggleFavourite(String propertyId) async {
     if (await _networkInfo.isConnected) {
       try {
-        // 1. Tell the server to toggle
-        final result = await _remoteDataSource.toggleFavourite(propertyId);
         
-        // 2. Refresh Local Cache
-        // Since we don't have the full property details here to build a HiveModel 
-        // manually, we just re-fetch all favorites from the API to sync Hive.
+        final result = await _remoteDataSource.toggleFavourite(propertyId);
+
         final freshApiModels = await _remoteDataSource.getAllFavourites();
         final freshHiveModels = FavouriteHiveModel.fromApiModelList(freshApiModels);
         await _localDatasource.cacheAllFavourites(freshHiveModels);
@@ -89,7 +86,7 @@ class FavouriteRepository implements IFavouriteRepository {
     }
   }
 
-  // Helper method for offline fallback
+
   Future<Either<Failure, List<FavouriteEntity>>> _getCachedFavourites() async {
     try {
       final localModels = await _localDatasource.getAllFavourites();

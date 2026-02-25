@@ -19,7 +19,7 @@ class IsFavouriteUsecase implements UsecaseWithParams<bool, String> {
 
   @override
   Future<Either<Failure, bool>> call(String propertyId) {
-    // This calls the Repository, which checks the local Hive box for an instant answer
+
     return _favouriteRepository.isFavourite(propertyId);
   }
 }

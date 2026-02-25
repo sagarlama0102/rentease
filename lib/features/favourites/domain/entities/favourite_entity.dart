@@ -4,7 +4,7 @@ class FavouriteEntity extends Equatable {
   final String? favouriteId;
   final String propertyId;
   final String userId;
-  final String? propertyTitle; // Optional: Add this to show the house name!
+  final String? propertyTitle; 
   final List<String> propertyImages;
 
   const FavouriteEntity({

@@ -10,8 +10,7 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Make sure this matches your backend IP/URL
-    // const String imageServerUrl = "http://192.168.101.15:4000";
+ 
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -22,7 +21,7 @@ class BookingCard extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Property Thumbnail Image
+           
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
@@ -42,7 +41,7 @@ class BookingCard extends StatelessWidget {
             ),
             const SizedBox(width: 16),
 
-            // 2. Info Column
+            
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +69,7 @@ class BookingCard extends StatelessWidget {
               ),
             ),
 
-            // 3. Action Button (Cancel)
+            
             if (booking.status == BookingStatus.pending)
               Align(
                 alignment: Alignment.center,
@@ -98,7 +97,7 @@ class BookingCard extends StatelessWidget {
     );
   }
 
-  // Helper to build a colored status badge
+
   Widget _buildStatusBadge(BookingStatus status) {
     Color badgeColor;
     switch (status) {

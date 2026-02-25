@@ -22,7 +22,6 @@ void main() async {
 
   //shared preference ko object eta banauni kinani
   //shared preference chai async ho tara provider chai sync
-
   // shared pref
   final sharedPrefs = await SharedPreferences.getInstance();
 

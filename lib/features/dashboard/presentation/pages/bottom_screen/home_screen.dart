@@ -19,8 +19,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Runs only once when screen loads
     Future.microtask(() {
       ref.read(propertyViewModelProvider.notifier).getAllProperties();
     });
@@ -52,7 +50,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
 
-                // Property Section (now a vertical 2-column grid)
                 _buildPropertyGrid(propertyState),
               ],
             ),
@@ -83,7 +80,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
 
-    // 2-column vertical grid
     return Padding(
       padding: const EdgeInsets.all(12),
       child: GridView.builder(
@@ -91,10 +87,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         shrinkWrap: true,
         itemCount: state.properties.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,        // 2 cards per row
+          crossAxisCount: 2,        
           crossAxisSpacing: 12,
           mainAxisSpacing: 12,
-          childAspectRatio: 0.75,   // Adjust depending on card height
+          childAspectRatio: 0.75,   
         ),
         itemBuilder: (context, index) {
           final property = state.properties[index];
