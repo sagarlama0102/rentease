@@ -17,7 +17,7 @@ class _BottomScreenLayoutState extends State<BottomScreenLayout> {
   List<Widget> lstBottomScreen = [
     HomeScreen(),
     MyBookingsScreen(),
-    FavoritesScreen(),
+    FavouritesScreen(),
     ProfileScreen(),
   ];
   @override

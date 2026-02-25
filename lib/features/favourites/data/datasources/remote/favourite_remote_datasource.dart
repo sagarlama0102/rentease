@@ -39,7 +39,7 @@ class FavouriteRemoteDatasource implements IFavouriteRemoteDataSource {
       );
 
       // Based on your backend: { favorites: [...], total: 10 }
-      final List data = response.data['favorites'];
+      final List data = response.data['data'];
 
       return data.map((json) => FavouriteApiModel.fromJson(json)).toList();
     } catch (e) {

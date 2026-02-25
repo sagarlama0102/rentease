@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rentease/app/theme/theme_extensions.dart';
+import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/core/utils/snackbar_utils.dart';
 import 'package:rentease/features/auth/presentation/pages/login_page.dart';
 import 'package:rentease/features/auth/presentation/state/auth_state.dart';
@@ -21,7 +22,7 @@ class ProfileScreen extends ConsumerStatefulWidget {
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final List<XFile> _selectedMedia = [];
   final ImagePicker _imagePicker = ImagePicker();
-  final String _baseUrl = "http://192.168.101.15:4000";
+  // final String _baseUrl = "http://192.168.101.15:4000";
   String? _selectedMediaType;
   String? _profilePictureUrl;
 
@@ -250,7 +251,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   : (authState.authEntity?.profilePicture !=
                                                 null // Adjust 'image' based on your user entity
                                             ? NetworkImage(
-                                                '$_baseUrl${authState.authEntity!.profilePicture!}',
+                                                '${ApiEndpoints.baseUrlOnly}${authState.authEntity!.profilePicture!}',
                                               )
                                             : null)
                                         as ImageProvider?,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rentease/app/theme/app_colors.dart';
+import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/features/auth/presentation/view_model/auth_view_model.dart';
 
 class HomeHeader extends ConsumerWidget {
@@ -11,7 +12,7 @@ class HomeHeader extends ConsumerWidget {
     // 1. Listen to the same Auth State as the Profile Page
     final authState = ref.watch(authViewModelProvider);
     final user = authState.authEntity;
-    final String baseUrl = "http://192.168.101.15:4000";
+    // final String baseUrl = "http://192.168.101.15:4000";
 
     // Fallback if name is empty
     final String userName = user?.username ?? "User";
@@ -57,7 +58,7 @@ class HomeHeader extends ConsumerWidget {
             radius: 28,
             backgroundColor: AppColors.authPrimary.withOpacity(0.2),
             backgroundImage: user?.profilePicture != null
-                ? NetworkImage('$baseUrl${user!.profilePicture}')
+                ? NetworkImage('${ApiEndpoints.baseUrlOnly}${user!.profilePicture}')
                 : null,
             child: user?.profilePicture == null
                 ? Text(

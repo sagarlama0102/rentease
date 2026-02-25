@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/features/booking/domain/entities/booking_entity.dart';
 
 class BookingCard extends StatelessWidget {
@@ -10,7 +11,7 @@ class BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Make sure this matches your backend IP/URL
-    const String imageServerUrl = "http://192.168.101.15:4000";
+    // const String imageServerUrl = "http://192.168.101.15:4000";
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
@@ -26,7 +27,7 @@ class BookingCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               child: Image.network(
                 booking.propertyImages.isNotEmpty
-                    ? "$imageServerUrl${booking.propertyImages[0]}"
+                    ? "${ApiEndpoints.baseUrlOnly}${booking.propertyImages[0]}"
                     : 'https://via.placeholder.com/150',
                 width: 90,
                 height: 90,

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/features/auth/presentation/view_model/auth_view_model.dart';
 import 'package:rentease/features/booking/presentation/state/booking_state.dart';
 import 'package:rentease/features/booking/presentation/view_model/booking_view_model.dart';
 import 'package:rentease/features/dashboard/presentation/view_model/property_viewmodel.dart';
 import 'package:rentease/features/dashboard/presentation/state/property_state.dart';
+import 'package:rentease/features/favourites/presentation/state/favourite_state.dart';
+import 'package:rentease/features/favourites/presentation/view_model/favourite_view_model.dart';
 
 class PropertyDetailScreen extends ConsumerStatefulWidget {
   final String propertyId;
@@ -17,17 +20,20 @@ class PropertyDetailScreen extends ConsumerStatefulWidget {
 
 class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
   // Use a consistent server URL (Update this if your IP changes)
-  final String imageServerUrl = "http://192.168.101.15:4000";
+  // final String imageServerUrl = "http://192.168.101.15:4000";
 
   @override
   void initState() {
     super.initState();
     // Fetch fresh data for this specific property when screen opens
-    Future.microtask(
-      () => ref
+    Future.microtask(() {
+      ref
           .read(propertyViewModelProvider.notifier)
-          .getPropertyById(widget.propertyId),
-    );
+          .getPropertyById(widget.propertyId);
+      ref
+          .read(favouriteViewModelProvider.notifier)
+          .isFavourite(widget.propertyId);
+    });
   }
 
   @override
@@ -49,6 +55,27 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
             content: Text("Booking request sent successfully!"),
             backgroundColor: Colors.green,
             duration: Duration(seconds: 3),
+          ),
+        );
+      }
+    });
+
+    // Listen for Favourite State changes
+    ref.listen<FavouriteState>(favouriteViewModelProvider, (previous, next) {
+      if (next.status == FavouriteStatusState.error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(next.errorMessage ?? "Error updating favourites"),
+          ),
+        );
+      } else if (next.status == FavouriteStatusState.updated) {
+        // Show a small feedback snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              next.isFavourite ? "Added to Wishlist" : "Removed from Wishlist",
+            ),
+            duration: const Duration(seconds: 1),
           ),
         );
       }
@@ -79,7 +106,7 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                     children: [
                       Image.network(
                         property.propertyImages.isNotEmpty
-                            ? "$imageServerUrl${property.propertyImages[0]}"
+                            ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}"
                             : 'https://via.placeholder.com/400',
                         fit: BoxFit.cover,
                       ),
@@ -99,27 +126,63 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                   ),
                 ),
 
-                // 2️⃣ Modern Back Button
+                // 2️⃣ Modern Header (Back Button & Favourite Toggle)
                 Positioned(
                   top: 45,
                   left: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9),
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.black),
-                      onPressed: () {
-                        ref
-                            .read(propertyViewModelProvider.notifier)
-                            .clearSelectedProperty();
-                        Navigator.pop(context);
-                      },
-                    ),
+                  right: 20, // Critical: span the width so 'spaceBetween' works
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Back Button
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.black,
+                          ),
+                          onPressed: () {
+                            ref
+                                .read(propertyViewModelProvider.notifier)
+                                .clearSelectedProperty();
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+
+                      // Favourite Toggle Button (Opposite side)
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final isFav = ref
+                              .watch(favouriteViewModelProvider)
+                              .isFavourite;
+
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                isFav ? Icons.favorite : Icons.favorite_border,
+                                color: isFav ? Colors.red : Colors.black,
+                              ),
+                              onPressed: () {
+                                ref
+                                    .read(favouriteViewModelProvider.notifier)
+                                    .toggleFavourite(widget.propertyId);
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-
                 // 3️⃣ Draggable Content Sheet
                 DraggableScrollableSheet(
                   initialChildSize: 0.65,

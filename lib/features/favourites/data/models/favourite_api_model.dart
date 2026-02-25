@@ -29,21 +29,37 @@ class FavouriteApiModel {
     this.propertyTitle,
   });
 
-  // 🔹 Manual extraction for populated 'property' field
-  factory FavouriteApiModel.fromJson(Map<String, dynamic> json) {
+factory FavouriteApiModel.fromJson(Map<String, dynamic> json) {
+  print("RAW JSON DATA: $json");
+  try {
+    // 1. Extract property map safely
     final propertyData = json['property'] is Map<String, dynamic>
         ? json['property'] as Map<String, dynamic>
         : null;
 
-    final List<String> images =
-        propertyData != null && propertyData['propertyImages'] != null
-            ? List<String>.from(propertyData['propertyImages'])
-            : [];
+    // 2. Extract images safely - using a very manual loop to prevent Type errors
+    List<String> images = [];
+    if (propertyData != null && propertyData['propertyImages'] is List) {
+      for (var item in propertyData['propertyImages']) {
+        if (item != null) images.add(item.toString());
+      }
+    }
 
     final String? title = propertyData?['title'];
 
+    // 3. Return the model
     return _$FavouriteApiModelFromJson(json).copyWithPopulatedData(images, title);
+  } catch (e) {
+    // If parsing fails, return a "Skeleton" model instead of crashing the app
+    return FavouriteApiModel(
+      id: json['_id']?.toString(),
+      propertyId: json['property'],
+      userId: json['user'],
+      propertyImages: [],
+      propertyTitle: "Error loading details",
+    );
   }
+}
 
   // Helper method to inject the populated data into the model
   FavouriteApiModel copyWithPopulatedData(List<String> images, String? title) {

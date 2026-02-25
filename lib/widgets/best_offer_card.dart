@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/features/dashboard/domain/entities/property_entity.dart';
 import 'package:rentease/widgets/icon_badge.dart';
 
@@ -11,10 +12,10 @@ class BestOfferCard extends StatelessWidget {
   // Inside BestOfferCard build method
 @override
 Widget build(BuildContext context) {
-  const String imageServerUrl = "http://192.168.101.15:4000";
+  // const String imageServerUrl = "http://192.168.101.15:4000";
 
   final String imageUrl = property.propertyImages.isNotEmpty 
-      ? "$imageServerUrl${property.propertyImages[0]}" 
+      ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}" 
       : 'https://via.placeholder.com/400';
 
   // REMOVE final double cardWidth = MediaQuery.of(context).size.width * 0.8;
