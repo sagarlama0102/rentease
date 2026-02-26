@@ -7,6 +7,7 @@ import 'package:rentease/features/booking/presentation/state/booking_state.dart'
 import 'package:rentease/features/booking/presentation/view_model/booking_view_model.dart';
 import 'package:rentease/features/dashboard/presentation/view_model/property_viewmodel.dart';
 import 'package:rentease/features/dashboard/presentation/state/property_state.dart';
+import 'package:rentease/features/dashboard/presentation/widgets/titl_pan_image.dart';
 import 'package:rentease/features/favourites/presentation/state/favourite_state.dart';
 import 'package:rentease/features/favourites/presentation/view_model/favourite_view_model.dart';
 
@@ -130,12 +131,18 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.network(
-                  property.propertyImages.isNotEmpty
-                      ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}"
-                      : 'https://via.placeholder.com/400',
-                  fit: BoxFit.cover,
-                ),
+                // Image.network(
+                //   property.propertyImages.isNotEmpty
+                //       ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}"
+                //       : 'https://via.placeholder.com/400',
+                //   fit: BoxFit.cover,
+                // ),
+                    TiltPanImage(
+                      imageUrl: property.propertyImages.isNotEmpty
+                          ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}"
+                          : 'https://via.placeholder.com/400',
+                      height: MediaQuery.of(context).size.height * 3.5, // Match the parent height
+                    ),
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
