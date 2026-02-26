@@ -49,13 +49,13 @@ class FavouriteViewModel extends Notifier<FavouriteState> {
         status: FavouriteStatusState.error,
         errorMessage: failure.message,
       ),
-      (isNowFavourite) {
+      (isNowFavourite) async{
         state = state.copyWith(
           status: FavouriteStatusState.updated,
           isFavourite: isNowFavourite, 
         );
         
-        getAllFavourites();
+        await getAllFavourites();
       },
     );
   }
