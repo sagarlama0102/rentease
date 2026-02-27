@@ -131,12 +131,7 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // Image.network(
-                //   property.propertyImages.isNotEmpty
-                //       ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}"
-                //       : 'https://via.placeholder.com/400',
-                //   fit: BoxFit.cover,
-                // ),
+                
                     TiltPanImage(
                       imageUrl: property.propertyImages.isNotEmpty
                           ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}"

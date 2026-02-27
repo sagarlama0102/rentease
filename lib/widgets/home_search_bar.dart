@@ -42,19 +42,19 @@ class _HomeSearchBarState extends ConsumerState<HomeSearchBar> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        // Modern approach: Use surfaceVariant for a subtle background difference
+        
         color: context.inputFillColor, 
-        borderRadius: BorderRadius.circular(16), // Slightly less rounded for a "boxy-modern" look
+        borderRadius: BorderRadius.circular(16), 
         border: Border.all(
           color: context.borderColor.withOpacity(0.5), 
           width: 1.5,
         ),
-        boxShadow: context.softShadow, // Uses the themed shadow from your extension
+        boxShadow: context.softShadow, 
       ),
       child: Row(
         children: [
           Icon(
-            Icons.search_rounded, // Rounded icons look more modern
+            Icons.search_rounded, 
             color: context.textSecondary,
             size: 22,
           ),
@@ -69,7 +69,7 @@ class _HomeSearchBarState extends ConsumerState<HomeSearchBar> {
                 fontSize: 16,
               ),
               decoration: InputDecoration(
-                hintText: "Search address, city, location...",
+                hintText: "Search address, city...",
                 hintStyle: TextStyle(
                   color: context.textTertiary,
                   fontSize: 15,

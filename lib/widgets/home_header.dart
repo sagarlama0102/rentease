@@ -56,7 +56,9 @@ class HomeHeader extends ConsumerWidget {
             radius: 28,
             backgroundColor: AppColors.authPrimary.withOpacity(0.2),
             backgroundImage: user?.profilePicture != null
-                ? NetworkImage('${ApiEndpoints.baseUrlOnly}${user!.profilePicture}')
+                ? NetworkImage(Uri.parse(ApiEndpoints.baseUrlOnly)
+              .resolve(user!.profilePicture!)
+              .toString(),)
                 : null,
             child: user?.profilePicture == null
                 ? Text(

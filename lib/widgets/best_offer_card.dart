@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentease/core/api/api_endpoints.dart';
 import 'package:rentease/features/dashboard/domain/entities/property_entity.dart';
-import 'package:rentease/widgets/icon_badge.dart';
+import 'package:rentease/features/dashboard/presentation/widgets/icon_badge.dart';
 
 class BestOfferCard extends StatelessWidget {
   final PropertyEntity property; 
