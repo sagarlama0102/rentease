@@ -233,7 +233,7 @@ class _PropertyDetailScreenState extends ConsumerState<PropertyDetailScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _buildModernSpecItem(context, Icons.bed, "${property.bhk} BHK"),
+                        _buildModernSpecItem(context, Icons.bed, "${property.bhk} "),
                         _buildModernSpecItem(context, Icons.home, property.propertyType),
                         _buildModernSpecItem(context, Icons.check_circle, property.isRented ? "Rented" : "Available"),
                       ],
