@@ -62,6 +62,8 @@ class AuthRepository implements IAuthRepository {
         final apiModel = await _authRemoteDataSource.login(email, password);
         if (apiModel != null) {
           final entity = apiModel.toEntity();
+          final localModel = AuthHiveModel.fromEntity(entity);
+        await _authDatasource.register(localModel);
           return Right(entity);
         }
         return const Left(ApiFailure(message: "Invalid Credentials"));

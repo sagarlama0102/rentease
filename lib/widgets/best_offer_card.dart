@@ -1,109 +1,120 @@
+
 import 'package:flutter/material.dart';
-import 'package:rentease/models/property.dart';
-import 'package:rentease/widgets/icon_badge.dart';
+import 'package:rentease/core/api/api_endpoints.dart';
+import 'package:rentease/features/dashboard/domain/entities/property_entity.dart';
+import 'package:rentease/features/dashboard/presentation/widgets/icon_badge.dart';
 
 class BestOfferCard extends StatelessWidget {
-  final Property property;
+  final PropertyEntity property; 
+  
   const BestOfferCard({super.key, required this.property});
 
-  @override
-  Widget build(BuildContext context) {
-    final double cardWidth = MediaQuery.of(context).size.width * 0.8;
-    return Container(
-      width: cardWidth,
-      margin: EdgeInsets.only(right: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Stack(
-          children: [
-            Image.asset(
-              property.imageUrl,
-              height: 250,
-              width: cardWidth,
+  
+@override
+Widget build(BuildContext context) {
+
+
+  final String imageUrl = property.propertyImages.isNotEmpty 
+      ? "${ApiEndpoints.baseUrlOnly}${property.propertyImages[0]}" 
+      : 'https://via.placeholder.com/400';
+
+ 
+
+  return Container(
+    
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          // IMAGE SECTION
+          Positioned.fill( 
+            child: Image.network(
+              imageUrl,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                color: Colors.grey.shade200,
+                child: const Icon(Icons.broken_image, color: Colors.grey, size: 30),
+              ),
             ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: [0.5, 1.0],
+          ),
+          
+          // GRADIENT OVERLAY
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.transparent, Colors.black.withOpacity(0.85)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0.4, 1.0],
+                ),
+              ),
+            ),
+          ),
+
+          // PROPERTY DETAILS
+          Positioned(
+            bottom: 0, left: 0, right: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(10), 
+              child: Column(
+                mainAxisSize: MainAxisSize.min, 
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    property.title,
+                    style: const TextStyle(
+                      color: Colors.white, 
+                      fontSize: 16, 
+                      fontWeight: FontWeight.bold
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      property.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  Text(
+                    "Rs. ${property.price}",
+                    style: const TextStyle(
+                      color: Colors.white, 
+                      fontSize: 14, 
+                      fontWeight: FontWeight.w600
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      property.price,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on, color: Colors.white, size: 20),
-                        SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            property.location,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.white, size: 14),
+                      const SizedBox(width: 2),
+                      Expanded(
+                        child: Text(
+                          property.city, 
+                          style: const TextStyle(color: Colors.white, fontSize: 12),
+                          overflow: TextOverflow.ellipsis,
                         ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  
+                  SingleChildScrollView( 
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        IconBadge(icon: Icons.bed, text: property.bhk),
+                        const SizedBox(width: 4),
+                        IconBadge(icon: Icons.home_work, text: property.propertyType),
                       ],
                     ),
-                    SizedBox(height: 12),
-                    Row(
-                      children: [
-                        IconBadge(icon: Icons.bed, text: '${property.beds}Bed'),
-                        SizedBox(width: 8),
-                        IconBadge(
-                          icon: Icons.shower,
-                          text: '${property.baths}Bath',
-                        ),
-                        SizedBox(width: 8),
-                        IconBadge(icon: Icons.crop_square, text: property.area),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              top: 100,
-              right: 16,
-              child: CircleAvatar(
-                radius: 24,
-                backgroundColor: Colors.white,
-                backgroundImage:  AssetImage('assets/images/personimage.png'),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 }

@@ -3,9 +3,9 @@ import 'package:rentease/features/auth/domain/entities/auth_entity.dart';
 
 part 'auth_api_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(includeIfNull: false)
 class AuthApiModel {
-  @JsonKey(name: '_id')
+  @JsonKey(name: '_id',includeIfNull: false)
   final String? id;
   final String firstName;
   final String lastName;
@@ -14,7 +14,7 @@ class AuthApiModel {
   final String username;
   final String? password;
   final String? confirmPassword;
-  @JsonKey(includeIfNull: false)
+  
   final String? profilePicture;
 
   const AuthApiModel({
@@ -33,34 +33,6 @@ class AuthApiModel {
       _$AuthApiModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthApiModelToJson(this);
-
-  // //toJson
-  // Map<String, dynamic> toJson() {
-  //   return {
-  //     "firstName": firstName,
-  //     "lastName": lastName,
-  //     "email": email,
-  //     "phoneNumber": phoneNumber,
-  //     "username": username,
-  //     "password": password,
-  //     "confirmPassword": confirmPassword,
-  //     "profilePicture": profilePicture,
-  //   };
-  // }
-
-  // //fromJson
-  // factory AuthApiModel.fromJson(Map<String, dynamic> json) {
-  //   return AuthApiModel(
-  //     id: json['_id'] as String?,
-  //     firstName: json['firstName'] as String,
-  //     lastName: json['lastName'] as String,
-  //     email: json['email'] as String,
-  //     username: json['username'] as String,
-  //     phoneNumber: json['phoneNumber'] as String,
-  //     profilePicture: json['profilePicture'] as String?,
-  //     password: json['password'] as String?,
-  //   );
-  // }
 
   //toEntity
   AuthEntity toEntity() {

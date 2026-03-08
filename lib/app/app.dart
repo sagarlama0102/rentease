@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:rentease/app/theme/app_theme.dart';
+import 'package:rentease/core/routes/app_route.dart';
 import 'package:rentease/features/splash/presentation/pages/splash_page.dart';
 
 class App extends StatelessWidget {
@@ -15,6 +16,9 @@ class App extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
       home:  SplashPage(),
+
+      onGenerateRoute: AppRoute.onGenerateRoute,
+      
     );
   }
 }
