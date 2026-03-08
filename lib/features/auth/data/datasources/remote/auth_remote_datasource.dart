@@ -83,7 +83,7 @@ class AuthRemoteDatasource implements IAuthRemoteDataSource {
     final fileName = photo.path.split('/').last;
     final formData = FormData.fromMap({
       
-      'image': await MultipartFile.fromFile(
+      'profilePicture': await MultipartFile.fromFile(
         photo.path,
         filename: fileName,
       ),
