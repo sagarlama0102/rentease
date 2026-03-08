@@ -3,7 +3,7 @@ class ApiEndpoints {
 
   // Base URL - change this for production
 
-  static const String baseUrlOnly = 'http://10.125.255.80:4000';
+  static const String baseUrlOnly = 'http://172.26.0.73:4000';
 
   static const String baseUrl = '$baseUrlOnly/api/';
 
